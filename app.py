@@ -10,7 +10,7 @@ se van a ir agregando de a uno, sobre esta misma base.
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 
 from database import get_connection, guardar_hipotesis, init_db
 from adapters import crossref, europepmc, openalex, plos, semantic_scholar
@@ -114,6 +114,23 @@ def guardar_articulo(conn, articulo: dict) -> int:
         ),
     )
     return cursor.lastrowid
+
+
+@app.route("/")
+def index():
+    """
+    Sirve el frontend (novascientia-app.html) directamente desde Flask.
+
+    Esto es clave: si abrís el HTML con doble clic (protocolo file://),
+    Chrome bloquea los pedidos hacia la API por seguridad. Sirviéndolo
+    desde acá, todo corre bajo el mismo origen (http://localhost:5000)
+    y ese problema desaparece.
+
+    Requiere que "novascientia-app.html" esté en la misma carpeta que
+    este app.py.
+    """
+    carpeta = os.path.dirname(os.path.abspath(__file__))
+    return send_from_directory(carpeta, "novascientia-app.html")
 
 
 @app.route("/api/articulos/buscar", methods=["GET"])
