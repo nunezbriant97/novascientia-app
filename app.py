@@ -20,6 +20,26 @@ load_dotenv()  # lee el archivo .env y carga las claves como variables de entorn
 
 app = Flask(__name__)
 
+
+@app.after_request
+def _agregar_headers_cors(response):
+    """
+    Permite que el frontend (el archivo HTML, abierto directo en el
+    navegador o servido desde otro origen) pueda llamar a esta API sin
+    que el navegador lo bloquee por CORS.
+    """
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
+
+
+@app.route("/api/<path:ruta>", methods=["OPTIONS"])
+def _preflight_cors(ruta):
+    # El navegador manda esto antes de un POST con JSON, para preguntar
+    # si tiene permiso -- le contestamos que sí, sin hacer nada más.
+    return "", 200
+
 # Todas las fuentes de búsqueda de artículos disponibles hasta ahora.
 # ORCID no entra acá porque busca autores, no artículos -- va a tener
 # su propio endpoint más adelante.
