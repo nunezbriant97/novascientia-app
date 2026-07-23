@@ -14,7 +14,7 @@ from flask import Flask, jsonify, request
 
 from database import get_connection, init_db
 from adapters import crossref, europepmc, openalex, plos, semantic_scholar
-import sve
+import groq_client
 
 load_dotenv()  # lee el archivo .env y carga las claves como variables de entorno
 
@@ -172,108 +172,32 @@ def listar_articulos():
     return jsonify([dict(fila) for fila in filas])
 
 
-@app.route("/api/proyectos", methods=["POST"])
-def crear_proyecto():
+@app.route("/api/chat", methods=["POST"])
+def chat_endpoint():
     """
-    Crea un proyecto nuevo.
+    Modo conversación general del Núcleo IA.
 
-    Body JSON: {"titulo": "..." (requerido), "descripcion": "...", "categoria": "..."}
-    """
-    datos = request.get_json(silent=True) or {}
-    titulo = (datos.get("titulo") or "").strip()
-    if not titulo:
-        return jsonify({"error": "Falta el campo 'titulo'"}), 400
+    Espera un JSON en el body:
+        {"mensaje": "¿Qué es un biofertilizante?", "historial": [...]}
 
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO proyectos (titulo, descripcion, categoria) VALUES (?, ?, ?)",
-        (titulo, datos.get("descripcion"), datos.get("categoria")),
-    )
-    proyecto_id = cursor.lastrowid
-    cursor.execute(
-        "INSERT INTO proyecto_actividad_ia (proyecto_id, descripcion) VALUES (?, ?)",
-        (proyecto_id, "Proyecto creado."),
-    )
-    conn.commit()
-
-    fila = conn.execute("SELECT * FROM proyectos WHERE id = ?", (proyecto_id,)).fetchone()
-    conn.close()
-    return jsonify(dict(fila)), 201
-
-
-@app.route("/api/proyectos", methods=["GET"])
-def listar_proyectos():
-    """Lista todos los proyectos, más recientes primero."""
-    conn = get_connection()
-    filas = conn.execute("SELECT * FROM proyectos ORDER BY fecha_creacion DESC").fetchall()
-    conn.close()
-    return jsonify([dict(f) for f in filas])
-
-
-@app.route("/api/proyectos/<int:proyecto_id>", methods=["GET"])
-def obtener_proyecto(proyecto_id):
-    """Devuelve un proyecto puntual, junto con su conversación del SVE."""
-    conn = get_connection()
-    fila = conn.execute("SELECT * FROM proyectos WHERE id = ?", (proyecto_id,)).fetchone()
-    if fila is None:
-        conn.close()
-        return jsonify({"error": "Proyecto no encontrado"}), 404
-
-    proyecto = dict(fila)
-    proyecto["mensajes"] = sve.obtener_historial(conn, proyecto_id)
-    conn.close()
-    return jsonify(proyecto)
-
-
-@app.route("/api/proyectos/<int:proyecto_id>/mensajes", methods=["POST"])
-def enviar_mensaje(proyecto_id):
-    """
-    Manda un turno de charla al Scientific Visual Engine para un proyecto.
-
-    Body JSON: {"mensaje": "texto del usuario"}
-
-    Si el mensaje es una charla normal, devuelve {"tipo": "texto", "respuesta": "..."}.
-    Si el mensaje pide una imagen ("dibújalo", "hazme un render", etc.),
-    devuelve {"tipo": "imagen", "titulo": ..., "url": ..., ...}.
+    "historial" es opcional -- se usa para que el chat recuerde
+    mensajes anteriores de la misma conversación.
     """
     datos = request.get_json(silent=True) or {}
     mensaje = datos.get("mensaje")
+
     if not mensaje:
-        return jsonify({"error": "Falta el campo 'mensaje'"}), 400
+        return jsonify({"error": "Falta el campo 'mensaje' en el body"}), 400
+
+    historial = datos.get("historial")
 
     try:
-        resultado = sve.responder_mensaje(proyecto_id, mensaje)
+        respuesta = groq_client.chat(mensaje, historial)
     except RuntimeError as error:
-        return jsonify({"error": str(error)}), 502
+        # Esto salta si falta GROQ_API_KEY en el .env
+        return jsonify({"error": str(error)}), 500
 
-    return jsonify(resultado)
-
-
-@app.route("/api/proyectos/<int:proyecto_id>/mensajes", methods=["GET"])
-def listar_mensajes(proyecto_id):
-    """Devuelve toda la conversación guardada de un proyecto (orden cronológico)."""
-    conn = get_connection()
-    historial = sve.obtener_historial(conn, proyecto_id)
-    conn.close()
-    return jsonify(historial)
-
-
-@app.route("/api/proyectos/<int:proyecto_id>/visualizar", methods=["POST"])
-def forzar_visualizacion(proyecto_id):
-    """
-    Genera la imagen del proyecto ya, sin pasar por el chat (ej: para un
-    botón "Generar imagen" directo en el frontend).
-    """
-    conn = get_connection()
-    try:
-        resultado = sve.generar_visualizacion(conn, proyecto_id)
-    except RuntimeError as error:
-        return jsonify({"error": str(error)}), 502
-    finally:
-        conn.close()
-
-    return jsonify(resultado)
+    return jsonify({"respuesta": respuesta})
 
 
 if __name__ == "__main__":
