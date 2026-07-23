@@ -1,0 +1,2696 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NovaScientia AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            "colors": {
+                "outline-variant": "#c5c5d3",
+                "tertiary-fixed": "#eaddff",
+                "on-primary-fixed-variant": "#264191",
+                "inverse-surface": "#2d3133",
+                "surface-container-highest": "#e0e3e5",
+                "on-surface-variant": "#444651",
+                "secondary-fixed-dim": "#b4c5ff",
+                "surface-variant": "#e0e3e5",
+                "surface-container": "#eceef0",
+                "on-tertiary-container": "#bc9bff",
+                "error": "#ba1a1a",
+                "tertiary": "#37007e",
+                "on-primary-container": "#90a8ff",
+                "surface-tint": "#4059aa",
+                "surface-container-lowest": "#ffffff",
+                "secondary": "#0051d5",
+                "error-container": "#ffdad6",
+                "primary-fixed": "#dce1ff",
+                "primary": "#00236f",
+                "outline": "#757682",
+                "inverse-primary": "#b6c4ff",
+                "on-surface": "#191c1e",
+                "surface": "#f7f9fb",
+                "primary-container": "#1e3a8a",
+                "on-error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#5a00c6",
+                "on-secondary-fixed": "#00174b",
+                "surface-dim": "#d8dadc",
+                "surface-bright": "#f7f9fb",
+                "on-primary-fixed": "#00164e",
+                "secondary-fixed": "#dbe1ff",
+                "on-secondary": "#ffffff",
+                "on-primary": "#ffffff",
+                "background": "#f7f9fb",
+                "secondary-container": "#316bf3",
+                "on-secondary-fixed-variant": "#003ea8",
+                "inverse-on-surface": "#eff1f3",
+                "surface-container-high": "#e6e8ea",
+                "on-tertiary": "#ffffff",
+                "on-secondary-container": "#fefcff",
+                "surface-container-low": "#f2f4f6",
+                "primary-fixed-dim": "#b6c4ff",
+                "on-background": "#191c1e",
+                "on-tertiary-fixed": "#25005a",
+                "tertiary-container": "#5200b5",
+                "tertiary-fixed-dim": "#d2bbff",
+                "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "24px",
+                "margin-desktop": "64px",
+                "stack-xs": "4px",
+                "stack-sm": "8px",
+                "margin-mobile": "16px",
+                "container-max": "1440px",
+                "stack-xl": "64px",
+                "stack-md": "16px",
+                "stack-lg": "32px"
+            },
+            "fontFamily": {
+                "mono-label": ["IBM Plex Mono"],
+                "headline-md": ["IBM Plex Sans"],
+                "body-sm": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-md": ["Inter"],
+                "headline-lg": ["IBM Plex Sans"],
+                "headline-lg-mobile": ["IBM Plex Sans"],
+                "body-md": ["Inter"],
+                "display": ["IBM Plex Sans"]
+            },
+            "fontSize": {
+                "mono-label": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+body {
+    background-color: #f8fafc;
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+}
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+.glass-panel, .glass-card, .glass {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 4px 20px rgba(30, 58, 138, 0.05);
+}
+.article-card, .card-hover, .shadow-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.article-card:hover, .card-hover:hover, .shadow-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 12px 32px rgba(30, 58, 138, 0.08);
+}
+.shadow-soft { box-shadow: 0px 4px 20px rgba(30, 58, 138, 0.05); }
+.active-chip { background-color: #1e3a8a; color: #ffffff; }
+.evidence-gradient { background: linear-gradient(90deg, #0051d5 0%, #06B6D4 100%); }
+.timeline-line { background: linear-gradient(to bottom, #00236f 0%, #E2E8F0 100%); }
+.scientific-pattern {
+    background-image: radial-gradient(circle, rgba(30,58,138,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+.custom-scrollbar::-webkit-scrollbar, ::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track, ::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.tab-panel[hidden] { display: none; }
+.nav-link.active {
+    background-color: #1e3a8a;
+    color: #ffffff;
+    font-weight: 600;
+}
+.nav-link.active .material-symbols-outlined { color: #ffffff; }
+.subtab.active {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+.card-shadow { box-shadow: 0px 4px 20px rgba(30, 58, 138, 0.05); }
+.card-shadow-hover:hover {
+    box-shadow: 0px 12px 32px rgba(30, 58, 138, 0.08);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+.scientific-gradient { background: linear-gradient(135deg, #00236f 0%, #0051d5 100%); }
+.chip-active { background-color: #1e3a8a; color: #ffffff; }
+.chip-inactive { background-color: #ffffff; color: #444651; border: 1px solid #e2e8f0; }
+.chip-inactive:hover { background-color: #f1f5f9; }
+.node-line { height: 2px; background: #cbd5e1; position: relative; flex-grow: 1; }
+.node-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #0051d5; border: 2px solid white;
+    box-shadow: 0 0 0 4px rgba(0, 81, 213, 0.1);
+}
+.nucleus-animation {
+    background: radial-gradient(circle at center, #2563EB 0%, #1E3A8A 50%, transparent 100%);
+    animation: pulse-glow 8s infinite ease-in-out;
+}
+@keyframes pulse-glow {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+.scrolling-content::-webkit-scrollbar { width: 4px; }
+.scrolling-content::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+</style>
+</head>
+<body class="font-body-md text-body-md">
+<header class="bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-margin-desktop py-stack-md w-full fixed top-0 left-0 z-50 h-16">
+<div class="flex items-center gap-stack-lg">
+<span class="font-display text-headline-md font-semibold text-primary tracking-tight">NovaScientia AI</span>
+<div class="hidden md:flex relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl text-body-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Buscar artículos, DOIs o autores..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="bg-primary text-white px-6 py-2 rounded-full font-semibold font-body-sm hover:opacity-90 active:scale-95 transition-all">Nuevo Proyecto</button>
+<div class="h-10 w-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-sm border-2 border-primary-container overflow-hidden">
+<span class="material-symbols-outlined text-white">account_circle</span>
+</div>
+</div>
+</header>
+<aside class="bg-surface-container-low h-[calc(100vh-64px)] w-64 shadow-sm fixed left-0 top-16 pt-6 pb-8 flex flex-col z-40 border-r border-outline-variant/20">
+<div class="px-6 mb-6">
+<h2 class="font-display text-body-lg font-bold text-primary">Research Hub</h2>
+<p class="text-on-surface-variant text-[12px] opacity-70">Descubrimiento impulsado por IA</p>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar px-1">
+<a href="#" class="nav-link active flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer transition-all" data-tab="inicio" onclick="showTab('inicio'); return false;">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-sm text-body-sm">Inicio</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="proyectos" onclick="showTab('proyectos'); return false;">
+<span class="material-symbols-outlined">folder_special</span>
+<span class="font-body-sm text-body-sm">Proyectos</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="motor-ia" onclick="showTab('motor-ia'); return false;">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-sm text-body-sm">Motor AI</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="explorador" onclick="showTab('explorador'); return false;">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-body-sm text-body-sm">Explorador Científico</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="hipotesis" onclick="showTab('hipotesis'); return false;">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="font-body-sm text-body-sm">Hipótesis</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="articulos" onclick="showTab('articulos'); return false;">
+<span class="material-symbols-outlined">article</span>
+<span class="font-body-sm text-body-sm">Artículos</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="autores" onclick="showTab('autores'); return false;">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-sm text-body-sm">Autores</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="experimentos" onclick="showTab('experimentos'); return false;">
+<span class="material-symbols-outlined">biotech</span>
+<span class="font-body-sm text-body-sm">Experimentos</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="laboratorio" onclick="showTab('laboratorio'); return false;">
+<span class="material-symbols-outlined">science</span>
+<span class="font-body-sm text-body-sm">Laboratorio</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="grafico" onclick="showTab('grafico'); return false;">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-body-sm text-body-sm">Gráfico Científico</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="favoritos" onclick="showTab('favoritos'); return false;">
+<span class="material-symbols-outlined">star</span>
+<span class="font-body-sm text-body-sm">Favoritos</span>
+</a>
+</nav>
+<div class="pt-4 mt-4 border-t border-outline-variant/20 px-1 space-y-1">
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="configuracion" onclick="showTab('configuracion'); return false;">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Configuración</span>
+</a>
+<a href="#" class="nav-link flex items-center gap-3 px-4 py-3 mx-2 my-0.5 rounded-lg cursor-pointer text-on-surface-variant hover:bg-surface-container-high/60 transition-all" data-tab="soporte" onclick="showTab('soporte'); return false;">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-sm text-body-sm">Soporte</span>
+</a>
+</div>
+</aside>
+<main id="main-content" class="ml-64 mt-16 min-h-[calc(100vh-64px)] overflow-y-auto bg-background">
+<div id="tab-inicio" class="tab-panel">
+<div class="px-8 py-12 relative overflow-hidden xl:mr-[340px]">
+            <div class="scientific-pattern absolute inset-0 pointer-events-none"></div>
+
+            <!-- Welcome Section -->
+            <section class="max-w-4xl mx-auto text-center mb-stack-xl relative z-10">
+                <h1 class="font-display text-display text-primary mb-stack-md">¿Qué descubrimiento quieres realizar hoy?</h1>
+                
+                <div class="relative mt-stack-lg group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-70"></div>
+                    <div class="relative bg-white rounded-xl shadow-lg border border-outline-variant/30 p-2 flex items-center">
+                        <span class="material-symbols-outlined text-outline px-4 text-[32px]">science</span>
+                        <input type="text" placeholder="Describe una idea científica, una hipótesis o un problema de investigación..." class="w-full border-none focus:ring-0 text-body-lg text-on-surface placeholder:text-outline/50 py-4">
+                        <button class="bg-primary text-white rounded-lg px-8 py-4 font-semibold hover:bg-primary-container transition-colors shadow-md active:scale-95 flex items-center gap-2">
+                            <span class="">Comenzar</span>
+                            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-stack-md mt-stack-lg">
+                    <button class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-container transition-all shadow-sm flex items-center gap-2 active:scale-95">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                        Generar hipótesis
+                    </button>
+                    <button class="border-2 border-primary text-primary px-8 py-3 rounded-lg font-semibold hover:bg-primary/5 transition-all flex items-center gap-2 active:scale-95">
+                        <span class="material-symbols-outlined">menu_book</span>
+                        Explorar literatura
+                    </button>
+                </div>
+            </section>
+
+            <!-- Discovery Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-gutter relative z-10">
+                <!-- Card 1 -->
+                <div class="bg-white p-8 rounded-xl border border-outline-variant/20 shadow-sm card-hover transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+                        <span class="material-symbols-outlined text-[160px] text-primary">search</span>
+                    </div>
+                    <div class="flex flex-col h-full">
+                        <div class="w-12 h-12 bg-secondary-container/10 rounded-lg flex items-center justify-center mb-stack-md">
+                            <span class="material-symbols-outlined text-secondary">search</span>
+                        </div>
+                        <h3 class="font-display text-headline-md text-primary mb-stack-xs">Buscar literatura</h3>
+                        <p class="text-on-surface-variant text-body-md mb-stack-lg">Accede a millones de artículos científicos curados por nuestra IA de procesamiento semántico.</p>
+                        <div class="mt-auto flex items-center text-secondary font-semibold gap-2 group-hover:translate-x-2 transition-transform">
+                            Ver más <span class="material-symbols-outlined">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-8 rounded-xl border border-outline-variant/20 shadow-sm card-hover transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+                        <span class="material-symbols-outlined text-[160px] text-primary">find_in_page</span>
+                    </div>
+                    <div class="flex flex-col h-full">
+                        <div class="w-12 h-12 bg-secondary-container/10 rounded-lg flex items-center justify-center mb-stack-md">
+                            <span class="material-symbols-outlined text-secondary">analytics</span>
+                        </div>
+                        <h3 class="font-display text-headline-md text-primary mb-stack-xs">Encontrar vacíos científicos</h3>
+                        <p class="text-on-surface-variant text-body-md mb-stack-lg">Identifica áreas con poca investigación y oportunidades de descubrimiento innovador.</p>
+                        <div class="mt-auto flex items-center text-secondary font-semibold gap-2 group-hover:translate-x-2 transition-transform">
+                            Analizar ahora <span class="material-symbols-outlined">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-8 rounded-xl border border-outline-variant/20 shadow-sm card-hover transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+                        <span class="material-symbols-outlined text-[160px] text-primary">model_training</span>
+                    </div>
+                    <div class="flex flex-col h-full">
+                        <div class="w-12 h-12 bg-secondary-container/10 rounded-lg flex items-center justify-center mb-stack-md">
+                            <span class="material-symbols-outlined text-secondary">tips_and_updates</span>
+                        </div>
+                        <h3 class="font-display text-headline-md text-primary mb-stack-xs">Crear nuevas hipótesis</h3>
+                        <p class="text-on-surface-variant text-body-md mb-stack-lg">Utiliza motores generativos para sintetizar conexiones entre disciplinas aparentemente inconexas.</p>
+                        <div class="mt-auto flex items-center text-secondary font-semibold gap-2 group-hover:translate-x-2 transition-transform">
+                            Sintetizar <span class="material-symbols-outlined">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white p-8 rounded-xl border border-outline-variant/20 shadow-sm card-hover transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+                        <span class="material-symbols-outlined text-[160px] text-primary">architecture</span>
+                    </div>
+                    <div class="flex flex-col h-full">
+                        <div class="w-12 h-12 bg-secondary-container/10 rounded-lg flex items-center justify-center mb-stack-md">
+                            <span class="material-symbols-outlined text-secondary">biotech</span>
+                        </div>
+                        <h3 class="font-display text-headline-md text-primary mb-stack-xs">Diseñar experimentos</h3>
+                        <p class="text-on-surface-variant text-body-md mb-stack-lg">Optimiza tus protocolos experimentales y reduce el sesgo mediante simulación algorítmica.</p>
+                        <div class="mt-auto flex items-center text-secondary font-semibold gap-2 group-hover:translate-x-2 transition-transform">
+                            Configurar <span class="material-symbols-outlined">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+</div>
+<aside class="fixed right-0 top-16 h-[calc(100vh-64px)] w-[340px] pt-8 pb-8 px-4 glass-panel z-30 hidden xl:flex flex-col border-l border-outline-variant/20">
+            <div class="flex items-center gap-2 mb-stack-lg border-b border-outline-variant/20 pb-stack-md">
+                <span class="material-symbols-outlined text-primary">insights</span>
+                <h2 class="font-display text-headline-md font-semibold text-primary">Scientific Insights</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-stack-lg pr-2 custom-scrollbar">
+                <!-- Trending Papers -->
+                <section>
+                    <div class="flex items-center justify-between mb-stack-sm">
+                        <h3 class="text-mono-label uppercase tracking-widest text-outline">Trending Papers</h3>
+                        <span class="material-symbols-outlined text-[16px] text-secondary">trending_up</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="group cursor-pointer">
+                            <p class="text-body-sm font-semibold text-primary line-clamp-2 group-hover:underline">Quantum Neural Entanglement in Biological Systems</p>
+                            <p class="text-[12px] text-on-surface-variant mt-1 italic">Nature Communications, 2024</p>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <p class="text-body-sm font-semibold text-primary line-clamp-2 group-hover:underline">CRISPR-Cas9 optimization via Reinforcement Learning</p>
+                            <p class="text-[12px] text-on-surface-variant mt-1 italic">Science Advances, 2024</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Latest Discoveries -->
+                <section class="">
+                    <div class="flex items-center justify-between mb-stack-sm">
+                        <h3 class="text-mono-label uppercase tracking-widest text-outline">Latest Discoveries</h3>
+                        <span class="material-symbols-outlined text-[16px] text-secondary">new_releases</span>
+                    </div>
+                    <div class="space-y-stack-md">
+                        <div class="bg-surface-container-low p-stack-md rounded-xl border border-white/50">
+                            <span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Biotech</span>
+                            <p class="text-body-sm mt-2">New enzyme identified that degrades microplastics at 40°C.</p>
+                        </div>
+                        <div class="bg-surface-container-low p-stack-md rounded-xl border border-white/50">
+                            <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Astrophysics</span>
+                            <p class="text-body-sm mt-2">Possible radio signals from proximity Centauri B detected.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Emerging Topics -->
+                <section>
+                    <h3 class="text-mono-label uppercase tracking-widest text-outline mb-stack-sm">Emerging Topics</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-white border border-outline-variant/30 text-on-surface-variant text-body-sm px-3 py-1 rounded-full hover:border-primary transition-colors cursor-default">Synthetic Biology</span>
+                        <span class="bg-white border border-outline-variant/30 text-on-surface-variant text-body-sm px-3 py-1 rounded-full hover:border-primary transition-colors cursor-default">Dark Matter</span>
+                        <span class="bg-white border border-outline-variant/30 text-on-surface-variant text-body-sm px-3 py-1 rounded-full hover:border-primary transition-colors cursor-default">Zero-Knowledge Proofs</span>
+                        <span class="bg-white border border-outline-variant/30 text-on-surface-variant text-body-sm px-3 py-1 rounded-full hover:border-primary transition-colors cursor-default">Carbon Capture</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer Stats -->
+            <div class="mt-auto pt-stack-lg border-t border-outline-variant/20">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <p class="text-headline-md font-bold text-primary">1.2M</p>
+                        <p class="text-[10px] text-outline uppercase font-semibold">Docs Analyzed</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-headline-md font-bold text-secondary">482</p>
+                        <p class="text-[10px] text-outline uppercase font-semibold">New Hypotheses</p>
+                    </div>
+                </div>
+            </div>
+
+</aside>
+</div>
+<div id="tab-articulos" class="tab-panel" hidden>
+<div class="grid grid-cols-12 min-h-[calc(100vh-4rem)]">
+<!-- Center Column: Article Feed -->
+<section class="col-span-8 h-full overflow-y-auto px-stack-xl py-stack-lg flex flex-col gap-stack-lg custom-scrollbar">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary">Biblioteca Científica</h1>
+<p class="text-on-surface-variant font-body-sm">Explora las últimas publicaciones en biotecnología y redes neuronales.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-outline-variant/30 rounded-lg text-body-sm font-medium hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                            Filtrar
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-outline-variant/30 rounded-lg text-body-sm font-medium hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">sort</span>
+                            Ordenar
+                        </button>
+</div>
+</div>
+<!-- Buscador real conectado al backend -->
+<div class="flex gap-2">
+<input id="buscador-articulos" type="text" placeholder="Buscar artículos (ej: biofertilizantes en suelos ácidos)..."
+    class="flex-1 p-3 border border-outline-variant rounded-lg text-body-sm focus:ring-2 focus:ring-secondary focus:border-transparent"
+    onkeydown="if(event.key==='Enter'){buscarArticulos();}"/>
+<button id="btn-buscar-articulos" onclick="buscarArticulos()"
+    class="px-6 py-2 rounded-lg bg-primary text-on-primary font-bold text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">search</span> Buscar
+</button>
+</div>
+<p id="articulos-estado" class="text-on-surface-variant font-body-sm"></p>
+<div id="lista-articulos" class="flex flex-col gap-stack-lg">
+<!-- Article Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-stack-lg article-card flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-stack-md text-label-md text-on-surface-variant font-mono-label">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded">Nature Biotech</span>
+<span>2024</span>
+<span>DOI: 10.1038/s41587-024-00123-x</span>
+<span class="flex items-center gap-1 text-emerald-600">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                Peer-Reviewed
+                            </span>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="text-[12px] font-bold text-primary">Nivel de Evidencia: IA+</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Altísima Confianza</p>
+</div>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary leading-tight">Síntesis Acelerada de Proteínas Mediante Redes Neuronales de Transformación Generativa</h2>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="font-semibold">Dr. Elena Rodríguez, Marc Jensen, et al.</span>
+<span class="text-outline">|</span>
+<span>Instituto de Biotecnología Avanzada de Madrid</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-body-md line-clamp-3">
+                        Este estudio presenta un nuevo paradigma en el diseño de proteínas sintéticas. Utilizando una arquitectura de transformadores modificada, hemos logrado reducir el tiempo de plegamiento computacional en un 40% manteniendo una precisión estructural del 99.8%...
+                    </p>
+<div class="flex items-center justify-between mt-2 pt-4 border-t border-outline-variant/10">
+<div class="flex gap-6 items-center">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-mono-label text-[13px]">
+<span class="material-symbols-outlined text-[18px]">format_quote</span>
+                                1,245 Citas
+                            </div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-mono-label text-[13px]">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+                                Percentil 99
+                            </div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-lg text-primary font-semibold text-body-sm hover:bg-primary/5 transition-colors">Ver Abstract</button>
+<button class="px-4 py-2 rounded-lg text-primary font-semibold text-body-sm hover:bg-primary/5 transition-colors">Citar</button>
+<button class="bg-primary-container text-white px-5 py-2 rounded-lg font-semibold text-body-sm hover:opacity-90 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+                                Leer Artículo
+                            </button>
+</div>
+</div>
+</div>
+<!-- Article Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-stack-lg article-card flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-stack-md text-label-md text-on-surface-variant font-mono-label">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-0.5 rounded">The Lancet</span>
+<span>2023</span>
+<span>DOI: 10.1016/S0140-6736(23)</span>
+<span class="flex items-center gap-1 text-emerald-600">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                Peer-Reviewed
+                            </span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary leading-tight">Impacto de la Nanomedicina en el Tratamiento de Patologías Neuronales Degenerativas</h2>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="font-semibold">Luis M. de la Fuente, Sarah Connor</span>
+<span class="text-outline">|</span>
+<span>Hospital Clínic de Barcelona</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-body-md line-clamp-3">
+                        Exploramos la liberación controlada de fármacos mediante nanopartículas de oro funcionalizadas. Los resultados clínicos preliminares muestran una mejoría significativa en la regeneración sináptica en modelos animales...
+                    </p>
+<div class="flex items-center justify-between mt-2 pt-4 border-t border-outline-variant/10">
+<div class="flex gap-6 items-center">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-mono-label text-[13px]">
+<span class="material-symbols-outlined text-[18px]">format_quote</span>
+                                890 Citas
+                            </div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-lg text-primary font-semibold text-body-sm hover:bg-primary/5 transition-colors">Citar</button>
+<button class="bg-primary-container text-white px-5 py-2 rounded-lg font-semibold text-body-sm hover:opacity-90 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+                                Guardar
+                            </button>
+</div>
+</div>
+</div>
+<!-- Article Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-stack-lg article-card flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-stack-md text-label-md text-on-surface-variant font-mono-label">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded">arXiv (Pre-print)</span>
+<span>2024</span>
+<span>arXiv:2403.12345</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary leading-tight">Optimización Bayesiana para el Descubrimiento de Materiales Superconductores</h2>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="font-semibold">Prof. Xiao Wong, David Clarke</span>
+<span class="text-outline">|</span>
+<span>Tsinghua University</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed text-body-md line-clamp-3">
+                        Propuesta de un marco de trabajo que utiliza procesos gaussianos para navegar el espacio de fases químicos de compuestos de alta temperatura. Se identifican tres nuevos candidatos con potencial...
+                    </p>
+<div class="flex items-center justify-between mt-2 pt-4 border-t border-outline-variant/10">
+<div class="flex gap-6 items-center">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-mono-label text-[13px]">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                4.2k Vistas
+                            </div>
+</div>
+<div class="flex items-center gap-2">
+<button class="bg-primary-container text-white px-5 py-2 rounded-lg font-semibold text-body-sm hover:opacity-90 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">link</span>
+                                Fuente Original
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Contextual Insights -->
+<aside class="col-span-4 border-l border-outline-variant/30 h-full bg-white overflow-y-auto px-stack-md py-stack-lg custom-scrollbar space-y-stack-xl">
+<!-- Filters & Search Panel -->
+<div class="space-y-stack-md">
+<h3 class="font-body-lg font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">manage_search</span>
+                        Refinar Búsqueda
+                    </h3>
+<div class="space-y-4">
+<div>
+<label class="text-label-md text-on-surface-variant block mb-2">Rango de Años</label>
+<div class="flex gap-2">
+<input class="w-1/2 p-2 border border-outline-variant rounded-lg text-body-sm" placeholder="2010" type="number"/>
+<input class="w-1/2 p-2 border border-outline-variant rounded-lg text-body-sm" placeholder="2024" type="number"/>
+</div>
+</div>
+<div>
+<label class="text-label-md text-on-surface-variant block mb-2">Institución</label>
+<select class="w-full p-2 border border-outline-variant rounded-lg text-body-sm">
+<option>Todas las instituciones</option>
+<option>MIT</option>
+<option>Stanford</option>
+<option>CSIC</option>
+</select>
+</div>
+<div class="flex items-center gap-2 py-2">
+<input class="rounded text-primary focus:ring-primary" id="open-access" type="checkbox"/>
+<label class="text-body-sm text-on-surface" for="open-access">Solo Open Access</label>
+</div>
+</div>
+</div>
+<!-- Map of Concepts (Mini Graph Placeholder) -->
+<div class="space-y-stack-md">
+<h3 class="font-body-lg font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+                        Mapa de Conceptos
+                    </h3>
+<div class="relative w-full h-48 bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden group cursor-crosshair">
+<!-- Simulated Concept Map with CSS -->
+<div class="absolute inset-0 p-4 opacity-40">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+<div class="absolute top-1/4 left-1/3 w-2 h-2 bg-secondary rounded-full"></div>
+<div class="absolute bottom-1/4 right-1/4 w-3 h-3 bg-secondary rounded-full"></div>
+<svg class="absolute inset-0 w-full h-full stroke-primary/20 stroke-1 fill-none">
+<line x1="50%" x2="33%" y1="50%" y2="25%"></line>
+<line x1="50%" x2="75%" y1="50%" y2="75%"></line>
+</svg>
+</div>
+<div class="absolute bottom-3 left-3 bg-white/80 backdrop-blur-md p-2 rounded text-[10px] font-mono-label text-primary shadow-sm">
+                            Biotech &gt; ML &gt; Proteins
+                        </div>
+<button class="absolute top-2 right-2 bg-white p-1 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[16px]">open_in_full</span>
+</button>
+</div>
+</div>
+<!-- Trending Topics -->
+<div class="space-y-stack-md">
+<h3 class="font-body-lg font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+                        Temas Emergentes
+                    </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary/5 text-primary border border-primary/20 rounded-full text-[12px] font-medium cursor-pointer hover:bg-primary/10 transition-colors">CRISPR 2.0</span>
+<span class="px-3 py-1 bg-primary/5 text-primary border border-primary/20 rounded-full text-[12px] font-medium cursor-pointer hover:bg-primary/10 transition-colors">Q-Bio Compute</span>
+<span class="px-3 py-1 bg-primary/5 text-primary border border-primary/20 rounded-full text-[12px] font-medium cursor-pointer hover:bg-primary/10 transition-colors">Neural Plasticity</span>
+<span class="px-3 py-1 bg-primary/5 text-primary border border-primary/20 rounded-full text-[12px] font-medium cursor-pointer hover:bg-primary/10 transition-colors">Graph Theory</span>
+</div>
+</div>
+<!-- Author Network -->
+<div class="space-y-stack-md">
+<h3 class="font-body-lg font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+                        Red de Autores
+                    </h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed-dim border border-outline-variant flex items-center justify-center text-[10px] font-bold">ER</div>
+<div>
+<p class="text-body-sm font-semibold">Elena Rodríguez</p>
+<p class="text-[11px] text-on-surface-variant">h-index: 42 • 12 Co-autores</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim border border-outline-variant flex items-center justify-center text-[10px] font-bold">MJ</div>
+<div>
+<p class="text-body-sm font-semibold">Marc Jensen</p>
+<p class="text-[11px] text-on-surface-variant">h-index: 28 • 8 Co-autores</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Articles -->
+<div class="space-y-stack-md pt-4 border-t border-outline-variant/20">
+<h3 class="font-body-lg font-bold text-primary">Lecturas Recomendadas</h3>
+<ul class="space-y-4">
+<li class="group cursor-pointer">
+<h4 class="text-body-sm font-medium group-hover:text-secondary transition-colors line-clamp-2">Modelado de Estructuras Terciarias en ARN mediante Redes Adversarias</h4>
+<p class="text-[11px] text-on-surface-variant mt-1">Science Research • 2023</p>
+</li>
+<li class="group cursor-pointer">
+<h4 class="text-body-sm font-medium group-hover:text-secondary transition-colors line-clamp-2">Avances en Computación Cuántica Aplicada a la Farmacología</h4>
+<p class="text-[11px] text-on-surface-variant mt-1">BioPhys J • 2024</p>
+</li>
+</ul>
+</div>
+</aside>
+
+</div>
+</div>
+<div id="tab-hipotesis" class="tab-panel" hidden>
+<div class="max-w-container-max mx-auto p-stack-lg">
+<div class="flex gap-2 mb-6 bg-white w-fit rounded-full p-1 border border-outline-variant/30 shadow-sm">
+<button class="subtab active px-5 py-2 rounded-full font-label-md text-label-md text-on-surface-variant transition-all" onclick="showSubtab('hip-general')">Vista general</button>
+<button class="subtab px-5 py-2 rounded-full font-label-md text-label-md text-on-surface-variant transition-all" onclick="showSubtab('hip-detalle')">Detalle de hipótesis</button>
+</div>
+<div id="hip-general" class="subtab-panel">
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row justify-between items-start gap-stack-lg mb-stack-xl">
+<div class="max-w-3xl">
+<h1 class="font-display text-display text-primary leading-tight mb-stack-xs">Hipótesis Generadas por IA</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    La inteligencia artificial analiza literatura científica reciente para detectar patrones, vacíos de conocimiento y oportunidades de investigación.
+                </p>
+</div>
+<div class="glass-card rounded-xl p-6 flex flex-wrap gap-8 items-center border border-outline-variant/20">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Último Análisis</span>
+<span class="font-headline-md text-headline-md text-primary">Hoy, 08:45 AM</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Papers Analizados</span>
+<span class="font-headline-md text-headline-md text-primary">12.4k</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Nuevas Hipótesis</span>
+<span class="font-headline-md text-secondary">+48</span>
+</div>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="flex flex-col xl:flex-row items-center gap-stack-lg mb-stack-lg">
+<div class="flex-1 w-full overflow-x-auto no-scrollbar pb-2">
+<div class="flex gap-3">
+<button class="active-chip flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md transition-all">
+<span class="material-symbols-outlined text-[18px]">grass</span> 🌾 Agricultura
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">settings_suggest</span> ⚙ Ingeniería
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">agriculture</span> 🐄 Ganadería
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">eco</span> 🌿 Ecología
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">energy_savings_leaf</span> 🌱 Cultivos
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">science</span> 🧪 Agronomía
+                    </button>
+<button class="bg-white border border-outline-variant/50 flex items-center gap-2 px-5 py-2.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[18px]">dns</span> 🧬 Biotecnología
+                    </button>
+</div>
+</div>
+<div class="relative w-full xl:w-96">
+<input class="w-full bg-white border border-outline-variant rounded-xl px-12 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" placeholder="Buscar por tema o DOI..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-stack-md mb-stack-lg">
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4">
+<div class="bg-primary/5 p-3 rounded-lg text-primary">
+<span class="material-symbols-outlined text-[28px]">lightbulb</span>
+</div>
+<div>
+<p class="text-outline font-label-md text-label-md">Hipótesis nuevas</p>
+<p class="font-headline-md text-headline-md font-bold">48</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4">
+<div class="bg-error/5 p-3 rounded-lg text-error">
+<span class="material-symbols-outlined text-[28px]">search_off</span>
+</div>
+<div>
+<p class="text-outline font-label-md text-label-md">Vacíos científicos</p>
+<p class="font-headline-md text-headline-md font-bold">12</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4">
+<div class="bg-secondary/5 p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined text-[28px]">description</span>
+</div>
+<div>
+<p class="text-outline font-label-md text-label-md">Artículos analizados</p>
+<p class="font-headline-md text-headline-md font-bold">12.4k</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4">
+<div class="bg-emerald-500/5 p-3 rounded-lg text-emerald-600">
+<span class="material-symbols-outlined text-[28px]">history_edu</span>
+</div>
+<div>
+<p class="text-outline font-label-md text-label-md">Nuevas publicaciones</p>
+<p class="font-headline-md text-headline-md font-bold">342</p>
+</div>
+</div>
+</div>
+<!-- Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
+<!-- Main Content: Hypothesis Detail -->
+<div class="lg:col-span-8 space-y-stack-lg">
+<article class="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-8">
+<!-- Card Header -->
+<div class="flex flex-wrap items-center gap-3 mb-6">
+<span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Alta prioridad</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Agricultura</span>
+<span class="ml-auto text-outline font-mono-label text-mono-label">ID: HYP-2024-0852</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-8 leading-snug">
+                            Evaluación del uso combinado de microorganismos promotores del crecimiento y biochar para aumentar la resiliencia del maíz frente al estrés hídrico.
+                        </h2>
+<!-- Main Sections Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg mb-8">
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-primary font-bold uppercase text-[11px] tracking-widest">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+                                    Hipótesis generada por IA
+                                </div>
+<p class="text-on-surface-variant font-body-md leading-relaxed italic border-l-4 border-primary/20 pl-4">
+                                    "La integración de biochar con consorcios microbianos podría incrementar simultáneamente la retención de agua y la actividad biológica del suelo, optimizando la translocación de nutrientes hacia el grano en condiciones de déficit hídrico severo."
+                                </p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-secondary font-bold uppercase text-[11px] tracking-widest">
+<span class="material-symbols-outlined text-[16px]">psychology_alt</span>
+                                    Razonamiento IA
+                                </div>
+<p class="text-on-surface-variant font-body-md leading-relaxed">
+                                    La IA detectó estudios independientes sobre biochar y microorganismos, pero poca evidencia de su combinación sinérgica bajo estrés hídrico en cereales de alto rendimiento. Existe una probabilidad del 82% de éxito en la mejora de biomasa radicular.
+                                </p>
+</div>
+</div>
+<!-- Vacuum Highlight -->
+<div class="bg-error/5 border border-error/20 rounded-lg p-6 mb-8 flex items-start gap-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<h4 class="font-label-md text-label-md text-error font-bold uppercase mb-1">Vacío científico detectado</h4>
+<p class="text-on-surface-variant text-body-md">No se encontraron estudios que evalúen conjuntamente esta combinación específica en maíz bajo sequía, particularmente integrando análisis de microbioma y estrés abiótico simultáneo.</p>
+</div>
+</div>
+<!-- Metrics Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-8 border-y border-outline-variant/30 mb-8">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Evidencia</span>
+<span class="font-label-md text-label-md text-primary font-bold">Moderada</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[65%] rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Novedad</span>
+<span class="font-label-md text-label-md text-secondary font-bold">Alta</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[90%] rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Impacto Estimado</span>
+<span class="font-label-md text-label-md text-emerald-600 font-bold">Extremo</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Evidence List -->
+<div class="mb-8">
+<h4 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-4">Evidencia utilizada (Contexto Bibliográfico)</h4>
+<div class="space-y-4">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-lg bg-surface hover:bg-surface-container-low transition-colors border border-outline-variant/20">
+<div>
+<p class="font-bold text-on-surface text-body-md mb-1">M. Zhang et al. "Biochar effects on soil hydraulics."</p>
+<p class="text-on-surface-variant font-label-md text-label-md italic">Journal of Soil Science, 2023 · DOI: 10.1016/j.jss.2023.01.04</p>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 hover:underline">
+                                        Ver fuente <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-lg bg-surface hover:bg-surface-container-low transition-colors border border-outline-variant/20">
+<div>
+<p class="font-bold text-on-surface text-body-md mb-1">S. Al-Amri "Rhizosphere microbial dynamics under drought."</p>
+<p class="text-on-surface-variant font-label-md text-label-md italic">Nature Agriculture, 2022 · DOI: 10.1038/s41598-022-12456</p>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 hover:underline">
+                                        Ver fuente <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Impact Radar/Bar Simulation -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant/20 mb-8">
+<h4 class="font-label-md text-label-md text-on-surface font-bold uppercase mb-6">Proyección de Impacto Multidimensional</h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="text-center">
+<p class="text-outline font-label-md mb-3">Científico</p>
+<div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="50.2" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-primary">80%</span>
+</div>
+</div>
+<div class="text-center">
+<p class="text-outline font-label-md mb-3">Ambiental</p>
+<div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-emerald-500" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="25.1" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-emerald-600">90%</span>
+</div>
+</div>
+<div class="text-center">
+<p class="text-outline font-label-md mb-3">Económico</p>
+<div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="100.4" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-secondary">60%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-outline-variant/30">
+<div class="flex gap-2">
+<button class="px-6 py-2.5 bg-primary text-white rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-[18px]">add_task</span> Diseñar experimento
+                                </button>
+<button class="px-6 py-2.5 border border-outline-variant text-on-surface rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">menu_book</span> Revisar literatura
+                                </button>
+</div>
+<div class="flex gap-3">
+<button class="p-2.5 rounded-lg border border-outline-variant hover:bg-surface-container transition-all" title="Guardar">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+<button class="p-2.5 rounded-lg border border-outline-variant hover:bg-surface-container transition-all" title="Añadir a reporte">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+<button class="p-2.5 rounded-lg border border-outline-variant hover:bg-surface-container transition-all" title="Exportar">
+<span class="material-symbols-outlined">ios_share</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Next Steps Teaser -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<h4 class="font-headline-md text-headline-md">Análisis Predictivo</h4>
+<p class="text-on-surface-variant text-body-md flex-1">
+                            Simule los resultados esperados de esta hipótesis utilizando nuestro motor de gemelo digital antes de iniciar pruebas de campo.
+                        </p>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 hover:underline">
+                            Iniciar simulación <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary/5 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<h4 class="font-headline-md text-headline-md">Colaboradores Sugeridos</h4>
+<p class="text-on-surface-variant text-body-md flex-1">
+                            La IA ha identificado 3 laboratorios en la UE que están trabajando actualmente en compuestos de biochar similares.
+                        </p>
+<button class="text-secondary font-bold text-label-md flex items-center gap-1 hover:underline">
+                            Ver red de colaboración <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Panel -->
+<div class="lg:col-span-4 space-y-stack-lg">
+<!-- Scientific Graph Preview -->
+<div class="bg-primary p-6 rounded-xl text-white relative overflow-hidden group">
+
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md mb-2">Grafo Científico</h3>
+<p class="font-body-sm text-body-sm opacity-80 mb-6">Explore visualmente las conexiones entre autores, conceptos y esta hipótesis.</p>
+<button class="w-full bg-white text-primary py-3 rounded-lg font-bold text-label-md hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">hub</span> Visualizar Grafo
+                        </button>
+</div>
+</div>
+<!-- Most Consulted -->
+<div class="bg-white rounded-xl border border-outline-variant/30 p-6">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-6">Hipótesis más consultadas</h3>
+<div class="space-y-6">
+<div class="group cursor-pointer">
+<p class="text-[10px] text-secondary font-bold mb-1 uppercase">Genómica</p>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors line-clamp-2">Edición genética con CRISPR-Cas9 para resistencia a salinidad en arroz.</p>
+<div class="flex items-center gap-3 mt-2 text-outline text-[11px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 1.2k</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">share</span> 42</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<p class="text-[10px] text-primary font-bold mb-1 uppercase">Suelos</p>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors line-clamp-2">Secuestro de carbono mediante micelio fúngico en praderas boreales.</p>
+<div class="flex items-center gap-3 mt-2 text-outline text-[11px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 850</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">share</span> 18</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Emerging Themes -->
+<div class="bg-white rounded-xl border border-outline-variant/30 p-6">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-6">Temas emergentes</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-low px-3 py-1.5 rounded-full text-[11px] font-medium text-on-surface-variant border border-outline-variant/30">#NanoFertilizantes</span>
+<span class="bg-surface-container-low px-3 py-1.5 rounded-full text-[11px] font-medium text-on-surface-variant border border-outline-variant/30">#FenómicaDeepLearning</span>
+<span class="bg-surface-container-low px-3 py-1.5 rounded-full text-[11px] font-medium text-on-surface-variant border border-outline-variant/30">#AgriculturaRegenerativa</span>
+<span class="bg-surface-container-low px-3 py-1.5 rounded-full text-[11px] font-medium text-on-surface-variant border border-outline-variant/30">#MicrobiomaRadicular</span>
+<span class="bg-surface-container-low px-3 py-1.5 rounded-full text-[11px] font-medium text-on-surface-variant border border-outline-variant/30">#IoTInSitu</span>
+</div>
+</div>
+<!-- Active Institutions -->
+<div class="bg-white rounded-xl border border-outline-variant/30 p-6">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-6">Instituciones activas</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg bg-surface border border-outline-variant/20 p-1 object-contain" data-alt="A minimalist logo for a prestigious technical university, featuring a stylized blue circular emblem with geometric patterns. The style is clean, modern, and academic, fitting for a global research institution. Neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBrRdw36kh39fBen7UdE467GZEj-nwJGSAk8gwj2ddpoGVYytNhswdWEbbL90GbMts_Lk7mhpo8Jh8V-Iyh5a8TZsG-FmlwA9HgFGr-HQ_2TrOmmA1_kVruw2UCfstth1HPLdmrwgsAIdapiK9EmV_ATMJmhAqnWy8Vjcg6ZL1u8BqZxBI3VKf_AdW4Bj4Plp24EHz-QG0T4ZxSb0O2ytN9b7lzKCod6btRkvsigUpxIUk9Sjh91EKmA"/>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Wageningen University</p>
+<p class="text-[10px] text-outline">Países Bajos · 14 hipótesis este mes</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg bg-surface border border-outline-variant/20 p-1 object-contain" data-alt="A professional research center logo, using a green and teal leaf motif integrated with a science flask. The design is sleek, professional, and corporate-scientific. White background, high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-atZtQyfTHTcoNjdTn7RFy5Sy5YwylLJ_4ZFBbsd2a3fO2yOmEKDfG_TX4r23SrIj4ET_SPZBBj4ncIn-QH215lDIAqNjspF6nAkuQClzKTT8XHKOiEgMldYD1WlbcUJWtvfyCNAXVpruR-HwnhW1Es82YQaDwmNvOIXwd7zjw_R1X0gs0z6vNy5hY09j9xcEfilB9CI-42lxAEEUJc9zF2OpfeIGQec8SIMmlvQXcox9AfM21fNDTw"/>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">CIMMYT Research</p>
+<p class="text-[10px] text-outline">México · 8 hipótesis este mes</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<div id="hip-detalle" class="subtab-panel" hidden>
+<!-- Header Section -->
+<section class="mb-stack-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-display text-headline-lg text-primary tracking-tight mb-2">Hipótesis de Investigación</h1>
+<p class="text-on-surface-variant max-w-2xl font-body-md">
+                        Propuestas generadas mediante análisis de grafos de conocimiento y LLMs especializados. 
+                        <span class="font-semibold text-secondary">Aviso:</span> Estas inferencias requieren validación experimental y revisión crítica por personal investigador.
+                    </p>
+</div>
+<div class="flex items-center gap-2 text-body-sm text-outline">
+<span class="material-symbols-outlined text-base">update</span>
+                    Última actualización: 12 Mayo 2025
+                </div>
+</div>
+<!-- Search Area -->
+<div class="mt-stack-lg flex flex-col md:flex-row gap-3">
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">psychology</span>
+<input class="w-full bg-white border border-outline-variant rounded-xl pl-12 pr-4 py-4 text-body-md shadow-sm focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all outline-none" placeholder="Describe una pregunta o una posible hipótesis..." type="text"/>
+</div>
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary/90 hover:shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">analytics</span>
+                    Analizar
+                </button>
+</div>
+</section>
+<!-- Main Hypothesis Card -->
+<section class="mb-stack-xl grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+<div class="xl:col-span-2 space-y-gutter">
+<article class="bg-white rounded-[24px] p-stack-lg shadow-sm border border-outline-variant/30 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-9xl">biotech</span>
+</div>
+<div class="flex justify-between items-start mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider border border-emerald-200">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Alta evidencia
+                        </span>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant">share</span></button>
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant">bookmark</span></button>
+</div>
+</div>
+<h2 class="font-display text-headline-md text-primary mb-4 leading-tight">Obtención de híbridos entre hongos y levaduras mediante electrofusión asistida por nanovectores</h2>
+<div class="p-4 bg-primary-container/5 border-l-4 border-primary rounded-r-xl mb-6">
+<span class="block text-label-md text-primary font-bold mb-1 uppercase">Hipótesis propuesta por IA</span>
+<p class="text-on-surface leading-relaxed italic font-serif text-lg">
+                            "La integración de nanovectores de carbono durante la electrofusión de protoplastos permite una hibridación interespecífica con una tasa de éxito 40% superior a los métodos convencionales, facilitando la transferencia de rutas metabólicas complejas de degradación de celulosa."
+                        </p>
+</div>
+<div class="grid md:grid-cols-2 gap-stack-lg">
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm mb-1">
+<span class="font-semibold text-on-surface">Nivel de confianza</span>
+<span class="text-primary font-bold">72%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary transition-all duration-1000 ease-out" style="width: 72%;"></div>
+</div>
+<p class="text-xs text-on-surface-variant">Basado en el análisis cruzado de 4,200 artículos y 12 bases de datos de proteómica.</p>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-sm uppercase text-outline">Justificación técnica</h4>
+<p class="text-body-sm text-on-surface-variant leading-relaxed">
+                                El modelo detectó que la conductividad superficial de los nanovectores reduce la tensión de ruptura necesaria en la membrana sin comprometer la viabilidad celular (Zhang et al., 2023; Miller, 2024).
+                            </p>
+</div>
+</div>
+</article>
+<!-- Evidence Grid -->
+<div>
+<h3 class="font-display text-headline-md text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">fact_check</span>
+                        Evidencia científica encontrada
+                    </h3>
+<div class="grid md:grid-cols-2 gap-stack-md">
+<!-- Card 1 -->
+<div class="bg-white p-5 rounded-xl border border-outline-variant/30 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Molecular Biology</span>
+<span class="text-xs text-outline">2024</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Electroporation dynamics in complex cell membranes with carbon nanotubes</h4>
+<p class="text-xs text-on-surface-variant mb-4">L. Thompson et al. | Nature Communications</p>
+<div class="p-3 bg-surface-container-low rounded-lg mb-4">
+<p class="text-xs italic text-on-surface font-medium leading-tight">
+                                    "Demuestra que los CNTs actúan como 'puntos calientes' eléctricos, localizando la energía..."
+                                </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-mono-label text-outline">DOI: 10.1038/ncomms.2024</span>
+<button class="text-primary font-bold text-xs flex items-center gap-1 hover:underline">
+                                    Ver artículo <span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-5 rounded-xl border border-outline-variant/30 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Fungal Genetics</span>
+<span class="text-xs text-outline">2023</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Interspecies protoplast fusion for lignin peroxidase enhancement</h4>
+<p class="text-xs text-on-surface-variant mb-4">H. Wu et al. | Journal of Fungi</p>
+<div class="p-3 bg-surface-container-low rounded-lg mb-4">
+<p class="text-xs italic text-on-surface font-medium leading-tight">
+                                    "Establece los parámetros críticos para la viabilidad de protoplastos de levadura..."
+                                </p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-mono-label text-outline">DOI: 10.3390/jof908078</span>
+<button class="text-primary font-bold text-xs flex items-center gap-1 hover:underline">
+                                    Ver artículo <span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Stats & Insights -->
+<div class="space-y-gutter">
+<!-- AI Insights Section -->
+<div class="bg-primary text-white rounded-[24px] p-stack-lg relative overflow-hidden shadow-xl">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+<h3 class="font-display text-headline-md mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">crisis_alert</span>
+                        Sospechas detectadas
+                    </h3>
+<div class="space-y-4">
+<div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-amber-300 text-sm">warning</span>
+<span class="text-xs font-bold uppercase tracking-widest">Punto ciego detectado</span>
+</div>
+<p class="text-sm font-medium leading-relaxed">
+                                Existe una laguna en la literatura sobre la combinación de <span class="text-amber-300">Técnica A (Electrofusión)</span> y <span class="text-amber-300">Técnica B (Inmunotolerancia)</span> en levaduras termófilas.
+                            </p>
+</div>
+<div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-cyan-300 text-sm">hub</span>
+<span class="text-xs font-bold uppercase tracking-widest">Inferencia IA</span>
+</div>
+<p class="text-sm font-medium leading-relaxed">
+                                Patrón emergente sugiere que el pH del medio influye inversamente en la absorción del nanovector en hongos filamentosos.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Evidence Graph Placeholder -->
+<div class="bg-white rounded-[24px] p-stack-lg border border-outline-variant/30 shadow-sm overflow-hidden">
+<h3 class="text-label-md text-outline uppercase font-bold mb-4">Grafo de Evidencia</h3>
+<div class="relative h-64 w-full bg-surface-container-low rounded-xl border border-dashed border-outline-variant flex items-center justify-center">
+<!-- Decorative SVG Graph -->
+<svg class="w-full h-full p-4" viewbox="0 0 200 150">
+<circle cx="100" cy="75" fill="#00236f" r="8"></circle>
+<circle cx="60" cy="40" fill="#316bf3" r="4"></circle>
+<circle cx="140" cy="40" fill="#316bf3" r="4"></circle>
+<circle cx="60" cy="110" fill="#316bf3" r="4"></circle>
+<circle cx="140" cy="110" fill="#316bf3" r="4"></circle>
+<line stroke="#00236f" stroke-dasharray="4" stroke-width="1" x1="100" x2="60" y1="75" y2="40"></line>
+<line stroke="#00236f" stroke-dasharray="4" stroke-width="1" x1="100" x2="140" y1="75" y2="40"></line>
+<line stroke="#00236f" stroke-dasharray="4" stroke-width="1" x1="100" x2="60" y1="75" y2="110"></line>
+<line stroke="#00236f" stroke-dasharray="4" stroke-width="1" x1="100" x2="140" y1="75" y2="110"></line>
+<circle cx="40" cy="30" fill="#cbd5e1" r="3"></circle>
+<line stroke="#cbd5e1" stroke-width="1" x1="60" x2="40" y1="40" y2="30"></line>
+</svg>
+<div class="absolute bottom-4 left-4 flex gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+</div>
+</div>
+<!-- Timeline Section -->
+<div class="bg-white rounded-[24px] p-stack-lg border border-outline-variant/30 shadow-sm">
+<h3 class="text-label-md text-outline uppercase font-bold mb-6">Evolución de la Evidencia</h3>
+<div class="relative pl-8 space-y-8">
+<div class="absolute left-[7px] top-0 bottom-0 w-[2px] timeline-line rounded-full"></div>
+<div class="relative">
+<div class="absolute -left-[27px] top-1 w-3 h-3 rounded-full bg-primary border-4 border-white ring-2 ring-primary/20"></div>
+<span class="text-xs font-mono-label text-primary font-bold">2025</span>
+<p class="text-xs text-on-surface-variant font-medium">Inferencia Actual: Nanovectores integrados.</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[27px] top-1 w-3 h-3 rounded-full bg-outline-variant border-4 border-white"></div>
+<span class="text-xs font-mono-label text-outline">2021</span>
+<p class="text-xs text-on-surface-variant">Primeros modelos de transporte iónico.</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[27px] top-1 w-3 h-3 rounded-full bg-outline-variant border-4 border-white"></div>
+<span class="text-xs font-mono-label text-outline">2016</span>
+<p class="text-xs text-on-surface-variant">Protocolos base de electrofusión.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sources Table Section -->
+<section class="mb-stack-xl">
+<h3 class="font-display text-headline-md text-primary mb-6">Fuentes consultadas</h3>
+<div class="bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/30">
+<th class="px-6 py-4 font-bold text-on-surface-variant uppercase tracking-wider text-xs">Repositorio</th>
+<th class="px-6 py-4 font-bold text-on-surface-variant uppercase tracking-wider text-xs">Identificador / DOI</th>
+<th class="px-6 py-4 font-bold text-on-surface-variant uppercase tracking-wider text-xs">Fecha Consulta</th>
+<th class="px-6 py-4 font-bold text-on-surface-variant uppercase tracking-wider text-xs">Estado</th>
+<th class="px-6 py-4 font-bold text-on-surface-variant uppercase tracking-wider text-xs text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-semibold">
+<div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center text-[10px] text-white">OA</div>
+                                        OpenAlex
+                                    </div>
+</td>
+<td class="px-6 py-4 font-mono-label text-outline text-xs">https://openalex.org/W429182</td>
+<td class="px-6 py-4 text-on-surface-variant">12 May 2025</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">ACCESIBLE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-bold hover:text-secondary">Enlace</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-semibold">
+<div class="w-6 h-6 rounded bg-secondary-container flex items-center justify-center text-[10px] text-white">PM</div>
+                                        PubMed Central
+                                    </div>
+</td>
+<td class="px-6 py-4 font-mono-label text-outline text-xs">PMC9827361</td>
+<td class="px-6 py-4 text-on-surface-variant">12 May 2025</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">ACCESIBLE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-bold hover:text-secondary">Enlace</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+<div id="tab-autores" class="tab-panel" hidden>
+<div class="pt-8">
+<!-- Top Search & Filter Section -->
+<section class="max-w-container-max mx-auto mb-12">
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h1 class="font-display text-headline-lg text-primary">Directorio de Investigadores</h1>
+<div class="text-on-surface-variant flex items-center gap-2 font-medium">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+                        2.4M Perfiles Verificados
+                    </div>
+</div>
+<div class="relative max-w-4xl">
+<input class="w-full bg-white border-outline-variant/30 rounded-xl px-12 py-5 shadow-soft focus:ring-2 focus:ring-primary focus:border-transparent text-lg transition-all" placeholder="Buscar autor, investigador, institución o laboratorio..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline scale-125">search</span>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-container transition-colors">Buscar</button>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">science</span> Área científica
+                    </button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">public</span> País
+                    </button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">school</span> Universidad
+                    </button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">corporate_fare</span> Institución
+                    </button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">fingerprint</span> ORCID
+                    </button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant/50 bg-white text-on-surface-variant font-medium hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">toggle_on</span> Estado
+                    </button>
+</div>
+</div>
+</section>
+<!-- Two Column Layout (Main Feed & Right Stats) -->
+<div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Researcher Cards -->
+<div class="lg:col-span-8 space-y-6">
+<!-- Researcher Card 1 -->
+<article class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20 shadow-hover group flex flex-col md:flex-row gap-6">
+<div class="flex-shrink-0">
+<div class="w-24 h-24 rounded-xl overflow-hidden ring-4 ring-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A formal professional studio portrait of a female scientist, Dr. Elena Rostova, mid-40s, looking confident with a slight smile. She is wearing a dark blue blazer. The background is a crisp white laboratory with high-tech glassware subtly blurred. Professional corporate photography, clean and bright." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA83E0UKeQAHKEXCaT7ucHBjh6pf-k5MV_SWVeMb_qxmt7cbaysgeBdh7YHLnp9htvKusZZbaLkqERbjsQfhpKaM6xkXqo7-mTwo4zR8_QgFwXO2T4fi0WCPKKtYWWT7b4XbViPlK5OI1Vd3iQMPgaO5U0tI046ViuU2HE78r_4oihImLmTqcpI9lLrii2M3pZFizuR1MWCR1r_CD9sMlIPjJk5KX4mT8vhezD4N4hu3LUIcB7VACpTGw"/>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-display text-headline-md text-primary font-bold">Dr. Elena Rostova</h3>
+<p class="text-on-surface-variant font-medium">Investigadora Senior • Biotecnología Sintética</p>
+</div>
+<button class="text-secondary hover:bg-secondary-fixed/30 p-2 rounded-full transition-all">
+<span class="material-symbols-outlined">bookmark_add</span>
+</button>
+</div>
+<div class="flex items-center gap-4 text-sm text-outline">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">account_balance</span> Wageningen University
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">location_on</span> Países Bajos
+                            </div>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">h-index</span>
+<span class="font-mono-label text-primary font-bold">42</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Citas</span>
+<span class="font-mono-label text-primary font-bold">12.4k</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Pubs</span>
+<span class="font-mono-label text-primary font-bold">340</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
+                            Especialista en ingeniería metabólica y biología de sistemas. Su trabajo reciente se centra en la optimización de rutas fotosintéticas en microalgas para la producción de biocombustibles sostenibles.
+                        </p>
+<div class="flex items-center gap-3 pt-2">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded uppercase tracking-wider border border-green-100">ORCID</span>
+<span class="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded uppercase tracking-wider border border-blue-100">Scholar</span>
+<span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded uppercase tracking-wider border border-indigo-100">Semantic</span>
+</div>
+<div class="flex-grow"></div>
+<button class="text-primary font-semibold text-sm hover:underline">Ver trayectoria completa</button>
+</div>
+</div>
+</article>
+<!-- Researcher Card 2 -->
+<article class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20 shadow-hover group flex flex-col md:flex-row gap-6">
+<div class="flex-shrink-0">
+<div class="w-24 h-24 rounded-xl overflow-hidden ring-4 ring-surface-container-low bg-primary/10 flex items-center justify-center">
+<span class="text-4xl font-display font-bold text-primary">MM</span>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-display text-headline-md text-primary font-bold">Prof. Mateo Morales</h3>
+<p class="text-on-surface-variant font-medium">Director de Lab • Inteligencia Artificial Cuántica</p>
+</div>
+<button class="text-secondary hover:bg-secondary-fixed/30 p-2 rounded-full transition-all">
+<span class="material-symbols-outlined">bookmark_add</span>
+</button>
+</div>
+<div class="flex items-center gap-4 text-sm text-outline">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">account_balance</span> ETH Zürich
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">location_on</span> Suiza
+                            </div>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">h-index</span>
+<span class="font-mono-label text-primary font-bold">58</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Citas</span>
+<span class="font-mono-label text-primary font-bold">28.1k</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Pubs</span>
+<span class="font-mono-label text-primary font-bold">192</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
+                            Pionero en el desarrollo de algoritmos de aprendizaje profundo optimizados para hardware cuántico. Sus investigaciones han redefinido los límites de la criptografía post-cuántica.
+                        </p>
+<div class="flex items-center gap-3 pt-2">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded uppercase tracking-wider border border-green-100">ORCID</span>
+<span class="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded uppercase tracking-wider border border-blue-100">Scholar</span>
+</div>
+<div class="flex-grow"></div>
+<button class="text-primary font-semibold text-sm hover:underline">Ver trayectoria completa</button>
+</div>
+</div>
+</article>
+<!-- Researcher Card 3 -->
+<article class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20 shadow-hover group flex flex-col md:flex-row gap-6">
+<div class="flex-shrink-0">
+<div class="w-24 h-24 rounded-xl overflow-hidden ring-4 ring-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male researcher in his late 30s, Dr. Julian Chen, working in a high-tech data visualization lab. He is looking thoughtfully at a holographic display. Soft ambient blue lighting, sharp focus on his face, cinematic scientific atmosphere, professional editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsxr8kNObdJgnPOqotriouXOEGgTt3Ie-r29oCGpSnFhOFgK72zuc14BZbzSVoyYyv8REZKFmlmNQaJfXjVcdx9Hei0snkOQOi5t0t31pFBIMHUD-eOTxmf7oEbEWVzqJ7flp2KOooWljzzaQsZNEVG4Z6Tpf4c4uQcx1gW9wh6XVazEZ3Rk_1ow5CS8eKYkamDv5G0CQdp0NlOhDVEf05wKhLqvtKiaTj291MB-vfibBjH7_-0XY9rg"/>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-display text-headline-md text-primary font-bold">Dr. Julian Chen</h3>
+<p class="text-on-surface-variant font-medium">Asistente de Investigación • Neurociencia Computacional</p>
+</div>
+<button class="text-secondary hover:bg-secondary-fixed/30 p-2 rounded-full transition-all">
+<span class="material-symbols-outlined">bookmark_add</span>
+</button>
+</div>
+<div class="flex items-center gap-4 text-sm text-outline">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">account_balance</span> MIT
+                            </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">location_on</span> Estados Unidos
+                            </div>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">h-index</span>
+<span class="font-mono-label text-primary font-bold">19</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Citas</span>
+<span class="font-mono-label text-primary font-bold">4.2k</span>
+</div>
+<div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col items-center min-w-[70px]">
+<span class="text-xs text-outline font-semibold">Pubs</span>
+<span class="font-mono-label text-primary font-bold">64</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
+                            Líder emergente en la modelización de redes neuronales a gran escala. Su equipo desarrolló recientemente el framework OpenBrain para la simulación de sinapsis en tiempo real.
+                        </p>
+<div class="flex items-center gap-3 pt-2">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded uppercase tracking-wider border border-green-100">ORCID</span>
+<span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded uppercase tracking-wider border border-indigo-100">Semantic</span>
+</div>
+<div class="flex-grow"></div>
+<button class="text-primary font-semibold text-sm hover:underline">Ver trayectoria completa</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Column: Statistics Panel -->
+<aside class="lg:col-span-4 space-y-6">
+<!-- World Collaboration Map -->
+<div class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20 overflow-hidden">
+<h4 class="font-display font-bold text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">public</span> Red de Colaboración Mundial
+                    </h4>
+<div class="relative h-48 w-full rounded-lg bg-surface-container-low overflow-hidden border border-outline-variant/10">
+<div class="bg-cover bg-center w-full h-full opacity-60" data-location="World" style="background-image: url('https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg')"></div>
+<!-- Decorative Map Overlay -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="absolute top-1/4 left-1/3 w-2 h-2 bg-secondary rounded-full animate-ping"></div>
+<div class="absolute top-1/2 left-1/2 w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+<div class="absolute top-1/3 right-1/4 w-2 h-2 bg-secondary rounded-full"></div>
+</div>
+</div>
+<p class="text-xs text-outline mt-3 leading-tight">Visualizando conexiones institucionales en tiempo real entre Europa, Norteamérica y Asia Central.</p>
+</div>
+<!-- Global Metrics Summary -->
+<div class="bg-primary-container text-white rounded-xl p-6 shadow-soft border border-primary">
+<h4 class="font-display font-bold text-on-primary-container mb-4">Métricas Globales de Red</h4>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-sm opacity-80">Autores en red</span>
+<span class="text-2xl font-display font-bold">142,809</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-white h-full" style="width: 75%"></div>
+</div>
+<div class="flex justify-between items-center text-sm font-medium">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-green-300">trending_up</span>
+<span class="text-green-300">+12%</span>
+<span class="opacity-70 italic ml-1">Citas/mes</span>
+</div>
+<span class="opacity-80">Meta: 150k</span>
+</div>
+</div>
+</div>
+<!-- Top Labs & Emerging Investigators -->
+<div class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20">
+<div class="border-b border-outline-variant/20 pb-4 mb-4">
+<h4 class="font-display font-bold text-primary mb-3">Top Laboratorios</h4>
+<ul class="space-y-3">
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center font-bold text-outline text-xs">01</div>
+<span class="text-sm font-medium">CERN Particle Lab</span>
+</div>
+<span class="text-xs font-mono-label text-secondary bg-secondary/10 px-2 py-0.5 rounded">A+</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center font-bold text-outline text-xs">02</div>
+<span class="text-sm font-medium">Max Planck Inst.</span>
+</div>
+<span class="text-xs font-mono-label text-secondary bg-secondary/10 px-2 py-0.5 rounded">A+</span>
+</li>
+</ul>
+</div>
+<div>
+<h4 class="font-display font-bold text-primary mb-3">Investigadores Emergentes</h4>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up avatar of a young energetic male PhD student in a lab, modern minimal tech photography style, bright background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIhp9aFiwtLrO1SDoS1_bK9hwQnbhIT4Pc4f_9y0evUUbJBXq4wDtu1IERGp8xUNX5diCvk76CS6hBeBuW_1ThcnzH_UJ026xK8JuFbYNUO633FBfd3jf8aGV0g_iqG-wIyxku92fVgl9a7ap1jymX-TSfBnYHIlSpu09vqQ-Q-2_NrnB-dWx6NdFIWwV8ShbsB0ijq05FDQeIfHGfG673H2HZld2mavG-TJ6yA83Zmw696lXf99JH2w"/>
+</div>
+<div>
+<p class="text-sm font-bold">Lars Jensen</p>
+<p class="text-[10px] text-outline uppercase tracking-wider">Virología</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up avatar of a young professional female researcher in computer science, modern office, daylight, clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpw6cgir9fwHGu6n9LGKOhSRr7kumJrtxGwsU8r4ycUwrqsNbQrKVsjsro14wiLhbyy-H0uX6dfCwOR6Wgylqc7qrzlG_wkjronGEQthiI3UvNqX2jtQhCilkIpGrHaLEFdgZfAZaVDvLL8BZ0lzWMfievIky5iC3ZaT94t8pPchesxhgzA5wWaIapC2vs2Wy7Py_QscX7ZB7n4JcVPcDG9AUGclRZ90Fo36pD0xImKelv5WdDsg3XTQ"/>
+</div>
+<div>
+<p class="text-sm font-bold">Sora Hayakawa</p>
+<p class="text-[10px] text-outline uppercase tracking-wider">Robótica</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Topic Expertise Word Cloud/Chart -->
+<div class="bg-white rounded-xl p-6 shadow-soft border border-outline-variant/20">
+<h4 class="font-display font-bold text-primary mb-4">Especialización de Temas</h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded text-sm text-primary font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Machine Learning</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-xs text-on-surface-variant hover:bg-primary hover:text-white transition-colors cursor-pointer">Genomics</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-lg text-secondary font-bold hover:bg-primary hover:text-white transition-colors cursor-pointer">Quantum Computing</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-xs text-on-surface-variant hover:bg-primary hover:text-white transition-colors cursor-pointer">Bio-Ethics</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-sm text-primary font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Fluid Dynamics</span>
+<span class="px-3 py-1 bg-surface-container-high rounded text-base text-on-surface-variant hover:bg-primary hover:text-white transition-colors cursor-pointer">Astrophysics</span>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20">
+<div class="flex items-center justify-between text-xs text-outline mb-2">
+<span>Relevancia</span>
+<span>94%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 94%"></div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+
+</div>
+</div>
+<div id="tab-proyectos" class="tab-panel" hidden>
+<div class="px-6 md:px-margin-desktop py-8">
+<!-- Header Section -->
+<header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-on-surface mb-1">Proyectos de Investigación</h2>
+<p class="text-on-surface-variant font-body-md max-w-2xl">Administra investigaciones generadas por IA, continúa su desarrollo y guárdalas temporalmente en la nube.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-outline-variant/20">
+<div class="flex flex-col px-4 border-r border-outline-variant/30">
+<span class="text-label-md text-outline uppercase">Activos</span>
+<span class="text-headline-md font-bold text-primary">12</span>
+</div>
+<div class="flex flex-col px-4 border-r border-outline-variant/30">
+<span class="text-label-md text-outline uppercase">Finalizados</span>
+<span class="text-headline-md font-bold text-secondary">5</span>
+</div>
+<div class="flex flex-col px-4 border-r border-outline-variant/30">
+<span class="text-label-md text-outline uppercase">Archivados</span>
+<span class="text-headline-md font-bold text-on-surface-variant">23</span>
+</div>
+<div class="flex flex-col px-4">
+<span class="text-label-md text-outline uppercase">Expira en</span>
+<span class="text-headline-md font-bold text-error">2 días</span>
+</div>
+<button class="ml-4 bg-primary text-on-primary px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Nuevo Proyecto
+                </button>
+</div>
+</header>
+<!-- Search & Filter Bar -->
+<section class="mb-stack-lg space-y-4">
+<div class="relative w-full">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="w-full bg-white border border-outline-variant/50 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-4 pl-12 pr-4 shadow-sm text-body-md" placeholder="Buscar proyecto, hipótesis, cultivo, microorganismo, autor o palabra clave..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-label-md text-outline mr-2">Categorías:</span>
+<button class="bg-secondary-container/20 text-secondary px-3 py-1.5 rounded-full text-label-md font-bold flex items-center gap-1.5 border border-secondary/20">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+                        Agricultura
+                    </button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Ingeniería</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Ganadería</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Ecología</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Cultivos</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Agronomía</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-full text-label-md hover:bg-outline-variant/30 transition-colors">Biotecnología</button>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-label-md text-on-surface-variant">
+<span>Ordenar por:</span>
+<select class="bg-transparent border-none focus:ring-0 font-bold text-primary cursor-pointer">
+<option>Más recientes</option>
+<option>Mayor avance</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-4 gap-gutter">
+<!-- Main Feed (75% width) -->
+<div class="xl:col-span-3 space-y-gutter">
+<!-- Quick Stats Row -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+<div class="bg-white p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between">
+<span class="text-[10px] uppercase font-bold text-outline">Proyectos activos</span>
+<span class="text-headline-md font-bold text-primary">12</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between">
+<span class="text-[10px] uppercase font-bold text-outline">Hipótesis convertidas</span>
+<span class="text-headline-md font-bold text-secondary">158</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between">
+<span class="text-[10px] uppercase font-bold text-outline">Artículos vinculados</span>
+<span class="text-headline-md font-bold text-on-surface">1.2k</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between">
+<span class="text-[10px] uppercase font-bold text-outline">Espacio temporal</span>
+<span class="text-headline-md font-bold text-on-surface-variant">45%</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between bg-error/5">
+<span class="text-[10px] uppercase font-bold text-error">Próximos a eliminar</span>
+<span class="text-headline-md font-bold text-error">3</span>
+</div>
+</div>
+<!-- Project Card 1 (Detailed) -->
+<div class="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
+<div class="p-6">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-4">
+<div class="flex items-center gap-3">
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Investigación en curso</span>
+<span class="text-label-md text-outline">• Expira en 24 días</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-bold text-primary">72%</span>
+<div class="w-32 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-green-500 w-[72%]"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Desarrollo de un biofertilizante basado en consorcios microbianos para mejorar la tolerancia del maíz al estrés hídrico</h3>
+<p class="text-body-sm text-on-surface-variant mb-6 italic border-l-4 border-outline-variant/30 pl-4">
+                            "La integración de biochar con consorcios microbianos de rizobacterias promotoras del crecimiento vegetal (PGPR) mejora la retención de humedad y la biodisponibilidad de nutrientes bajo condiciones de aridez extrema..."
+                        </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+<div>
+<h4 class="text-label-md text-outline uppercase mb-3">Indicadores clave</h4>
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">45</span>
+<span class="text-[10px] text-outline uppercase">Artículos</span>
+</div>
+<div class="flex flex-col border-l border-outline-variant/30 pl-4">
+<span class="font-bold text-on-surface">8</span>
+<span class="text-[10px] text-outline uppercase">Autores</span>
+</div>
+<div class="flex flex-col border-l border-outline-variant/30 pl-4">
+<span class="font-bold text-on-surface">3</span>
+<span class="text-[10px] text-outline uppercase">Patentes</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-label-md text-outline uppercase mb-3">Progreso de hitos</h4>
+<ul class="space-y-1.5">
+<li class="flex items-center gap-2 text-body-sm text-green-700">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                        Estado del arte
+                                    </li>
+<li class="flex items-center gap-2 text-body-sm text-green-700">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                        Revisión bibliográfica
+                                    </li>
+<li class="flex items-center gap-2 text-body-sm text-green-700">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                        Diseño experimental
+                                    </li>
+<li class="flex items-center gap-2 text-body-sm text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+                                        Conclusiones finales
+                                    </li>
+</ul>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 flex flex-col justify-center">
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-sm animate-pulse" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-bold text-xs uppercase">Actividad IA</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-relaxed">
+                                    Hace 2 horas: El motor NovaScientia incorporó <span class="font-bold text-primary">12 nuevos artículos</span> relevantes del Q1 2024.
+                                </p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container px-6 py-4 flex justify-between items-center border-t border-outline-variant/20">
+<div class="flex -space-x-2">
+<img class="h-8 w-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of a senior male researcher with glasses, focusing on academic and scientific depth. The lighting is natural and sophisticated, fitting for a modern laboratory environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKn3bF0ECBsjFJBJhFhpazbT6SVmBnHVQkvNBPwNOwlzOXrhwW0zBZNQi4M78KUey0eh8vLyCyklztJcHgjXsbKnvtcgLr-vBgzzakmFPAmNnLy-tV0s_35K4B5kSuQtEXt7abqXixYaeo62m_bd1e1SqpDoMWPeipOrY5RMuFIMMIvC1ajJC4P_ElWMnAeb4Mp3FN6pp7XqLoYI-79duNe4_ZR2hnGhKV4P9mh6HrnzRF1hvtk8AxrQ"/>
+<img class="h-8 w-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of a young female computational biologist, smiling professionally. Bright, clean aesthetic, high-tech background, representing innovation in bioprocessing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe-f2-wcDe8aqH-lj1zhD6kkQQ8FA8fVwb3_jIOn_5BaxWpvNUj5eu3oUu55JtbuLCSqoF4jCYHO2tMScL_--I_6a35sssn4eLloNRnqEl6c1fmXRWtXBBS0Y2ZzqHP_zoZfigsEY7kyxcJCGB7XHpNISazVluvsEACUD2MNKYdXTiWgw_xZxPNAIEPMbrtI6DvT2jDYbjYAwuUFqG9ZWqc7Nz03nhSGpLKfW4S1BLNp-USfyYojkNuw"/>
+<img class="h-8 w-8 rounded-full border-2 border-white object-cover" data-alt="Close-up of a diverse scientific researcher with a determined expression, wearing modern safety glasses. Professional office environment lighting, cool blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Q3c3uG712-oFCG2hDAGDs3wz579yRC4lwtF6bBMn9ZW9jwwAYs1CIbFT-lwk2yHpF8cK16Whoys_Y7sCC7vtOfcb6vQxMDlIod8iPrNxOJBLAZGgMaoj1QJeuWv-Os70lGINGKbddjy185Q4uGfJmkpZB3u4xC6UNM6zzhq3hGli5gbe1cbKpD9kghBaDhDpKAr8cySJyRPffOI8uCbjd-xD49ckrXwDF4dW4b9P_c6nqDXrSwSuFg"/>
+<div class="h-8 w-8 rounded-full border-2 border-white bg-outline-variant flex items-center justify-center text-[10px] font-bold text-white">+5</div>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-body-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">Ver Detalles</button>
+<button class="px-4 py-2 bg-primary text-white text-body-sm font-bold rounded-lg shadow-sm hover:shadow-md transition-all">Continuar Desarrollo</button>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden hover:shadow-md transition-shadow group flex flex-col md:flex-row">
+<div class="md:w-1/4 h-48 md:h-auto overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Extreme macro photography of mycelium networks growing on a dark, nutrient-rich substrate. Ethereal blue and cyan bioluminescent glows highlights the intricate branching structures. The style is hyper-detailed, clean, and futuristic, illustrating neuroplasticity models in fungal networks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr0JVVyvVuP3adFYJXH1s1XUvhrhhvqoi0_pJqr_jXnoLvbYqnITlAkNaCFanr4mkk8q4gDY5iH3BvTOBazEkGemczDVxjG58NC3R1wVt54kzaGdw1CwDj4ZPSZolU0L0d6rccWlL2UBDuVp3AroL4vjWh2d3vRzuQTZ54mhwJGA_hZKXgzxXxOJVp7mj9LTx_AAG2ARFYMrpPCF6x5g-O_vhO4kH_CVH2ngW4aZ9NmHLMOFzRZcdwPQ"/>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-2">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Revisión científica</span>
+<span class="text-headline-md font-bold text-on-surface-variant">45%</span>
+</div>
+<h3 class="font-headline-md font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Análisis de la plasticidad neuronal inducida por nanovectores en modelos de micelio fúngico</h3>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">Investigación sobre la modulación de respuestas electrofisiológicas en micelios mediante la inyección de vectores de carbono a escala nanométrica para computación biológica.</p>
+</div>
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center gap-4 text-outline text-body-sm">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="description">description</span> 28</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="groups">groups</span> 3</span>
+</div>
+<button class="material-symbols-outlined p-2 hover:bg-surface-container-high rounded-full transition-colors text-on-surface-variant" data-icon="more_vert">more_vert</button>
+</div>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden hover:shadow-md transition-shadow group flex flex-col md:flex-row">
+<div class="md:w-1/4 h-48 md:h-auto overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Microscopic view of Aspergillus niger colonies showing beautiful golden and dark spore structures. The image is captured using confocal microscopy with artistic yet scientifically accurate lighting. High-contrast detail highlighting metabolic activity for recombinant protein synthesis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT6vBbGoTcytrVwQqOYgIWJ7jXwCya2y-qT6lfOEJ4KrzDtGOecrUqQaTtSZ38EO4X2f9fEWci3pGIzUntcVIG6oJ5ikVyqi92JvMQjS59RJMy8CZ-dEgsrBwE7rg5CLcJhr5PsogDnn2JWqUclcgxkzQCTpbcMt9MZY0J0u-dvYXo4uNDwwZJmHcPqjUgWTlZnRpLi-T4j5rMKySuly1mY3rGni7odE2OqMgYuUANli6cnlue0IemAw"/>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-2">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Idea inicial</span>
+<span class="text-headline-md font-bold text-on-surface-variant">15%</span>
+</div>
+<h3 class="font-headline-md font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Optimización de rutas metabólicas en Aspergillus niger para la síntesis de proteínas recombinantes</h3>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">Exploración teórica sobre la edición genómica mediante CRISPR-Cas9 para maximizar el rendimiento enzimático en biorreactores industriales.</p>
+</div>
+<div class="mt-6 flex justify-between items-center">
+<div class="flex items-center gap-4 text-outline text-body-sm">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="description">description</span> 12</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="groups">groups</span> 2</span>
+</div>
+<button class="material-symbols-outlined p-2 hover:bg-surface-container-high rounded-full transition-colors text-on-surface-variant" data-icon="more_vert">more_vert</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Panel (25% width) -->
+<div class="space-y-gutter">
+<!-- Suggested Projects -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/20 shadow-sm">
+<h4 class="font-headline-md font-bold text-on-surface mb-4 text-lg">Proyectos sugeridos</h4>
+<div class="space-y-4">
+<div class="group cursor-pointer">
+<p class="text-xs font-bold text-secondary uppercase mb-1">IA Recomendación</p>
+<p class="text-body-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Impacto de la bio-remediación en suelos volcánicos post-erupción</p>
+<p class="text-[11px] text-outline mt-1">94% Coincidencia con perfil</p>
+</div>
+<hr class="border-outline-variant/20"/>
+<div class="group cursor-pointer">
+<p class="text-xs font-bold text-secondary uppercase mb-1">Tendencia</p>
+<p class="text-body-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Sintetización de polímeros biodegradables a partir de algas rojas</p>
+<p class="text-[11px] text-outline mt-1">Alta relevancia en Biotecnología</p>
+</div>
+</div>
+</div>
+<!-- Featured Authors -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/20 shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-headline-md font-bold text-on-surface text-lg">Autores destacados</h4>
+<button class="text-primary text-xs font-bold hover:underline">Ver todos</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of a middle-aged male scientist with graying beard and intense intellectual gaze. Background is a softly blurred modern laboratory with glass equipment. High-end editorial lighting, professional academic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbxDt9VzT4w326tmj0rVhuYhIhBAiF-zJ3TQU95pI-AWoY3ZfXW3tl6xhpFV6J-0aS7wCfaQrqrUjgmB4QhQ7wfHLzQBhRcf-qlqmsUoBbBdd9OeFxpa_tRDAFBy9TchCGVuX4eee3O8eCuL8w8rPacbvV4p6JcdF3uxfcMpk_4IIBuGOW4JgQNG0sjOjnJ6-XAO3yK9hS3I5m6hGadc-Xn-X4E7SVHQq-O4E00kjQeSXXm01CtnT0Zw"/>
+<div>
+<p class="text-body-sm font-bold text-on-surface">Dr. Aris Thorne</p>
+<p class="text-[11px] text-outline">Especialista en Microbiología</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of a young Asian female researcher in a white lab coat, holding a tablet. Sharp focus, bright daylight-balanced lighting, depicting a clean-room or controlled research environment. Modern and visionary vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSJILCqufYVKLY3WCv1Ec083yae2YbgdSRadPTjuEtEmBahH4Nm-LoOmGbIsU9g8Bc0Ydgh4MhlsWwk930UeOan_BMqG7vDGEs37GXMHQW8T5ptunCFuO-bBuagwbZd_gySPKtJbwXROnYM1XXSZqMVHErmDowLcfrInZbMSakSVrilnWcWxfpE57_uwqE7dfqTH-6xUJI7YkMtCwB27M9luqjFt9XPgS063bjAGOestB6Jlur78Yb1g"/>
+<div>
+<p class="text-body-sm font-bold text-on-surface">MSc. Elena Vance</p>
+<p class="text-[11px] text-outline">Genómica Aplicada</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of a distinguished professor in his 60s, wearing a tweed jacket. Academic library background with blurred book spines. Warm, intellectual atmosphere with soft directional lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1TD5uG_4Oed1XlRVW54YVYNXrpq1sp0EBTbczsoaGsSLG63mqgNDbXlve0l8pLEV4qUiqyGon7xHcdQcNfg99IEKqlDKAoYnOCBA_r9oxu2kghxbN0i7eGgcNOn0_IEPHaNqGuOFH7hihN8VTw0GCkVISQ-M6oxP3lGJZMKG6anWB5w568sDsQ9EsNHhmaFdHP_zc33I-VeGCeIYCRahwqKKgadwYtkAC0CqQcc3MMitGQ_pNqKhjUw"/>
+<div>
+<p class="text-body-sm font-bold text-on-surface">Prof. Julian Ricci</p>
+<p class="text-[11px] text-outline">Física de Partículas</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Scientific News -->
+<div class="bg-primary p-6 rounded-xl text-on-primary shadow-lg relative overflow-hidden">
+<!-- Background accent decorative element -->
+<div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+<h4 class="font-headline-md font-bold mb-3 text-lg flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="news">news</span>
+                        Novedades
+                    </h4>
+<p class="text-body-sm text-on-primary/80 mb-4 leading-relaxed">Publicada nueva regulación sobre el uso de edición genómica en cultivos de consumo masivo por la UE.</p>
+<button class="w-full py-2 bg-white text-primary font-bold text-xs rounded-lg hover:bg-secondary-container transition-colors">Leer Artículo Completo</button>
+</div>
+<!-- Related Hypotheses -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant/20 shadow-sm">
+<h4 class="font-headline-md font-bold text-on-surface mb-4 text-lg">Hipótesis relacionadas</h4>
+<div class="space-y-3">
+<div class="p-3 bg-surface-container-lowest border border-outline-variant/30 rounded-lg hover:border-primary transition-colors cursor-pointer">
+<p class="text-body-sm font-medium text-on-surface">"La salinidad del suelo actúa como catalizador para..."</p>
+<span class="text-[10px] text-secondary font-bold">8 Hipótesis vinculadas</span>
+</div>
+<div class="p-3 bg-surface-container-lowest border border-outline-variant/30 rounded-lg hover:border-primary transition-colors cursor-pointer">
+<p class="text-body-sm font-medium text-on-surface">"Los nanovectores pueden mitigar el daño oxidativo..."</p>
+<span class="text-[10px] text-secondary font-bold">14 Hipótesis vinculadas</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div id="tab-explorador" class="tab-panel" hidden>
+<div class="px-8 md:px-margin-desktop py-8">
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row justify-between items-start gap-8 mb-12">
+<div class="max-w-2xl">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">Explorador Científico IA</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">La inteligencia artificial analiza continuamente la literatura científica para descubrir nuevas oportunidades de investigación e innovación.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:w-auto">
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center card-shadow">
+<span class="text-primary font-bold text-2xl">14.2k</span>
+<span class="text-[10px] uppercase font-bold text-outline">Artículos hoy</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center card-shadow">
+<span class="text-secondary font-bold text-2xl">84</span>
+<span class="text-[10px] uppercase font-bold text-outline">Hipótesis</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center card-shadow">
+<span class="text-tertiary-container font-bold text-2xl">1.1M</span>
+<span class="text-[10px] uppercase font-bold text-outline">Conexiones</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center card-shadow">
+<span class="text-error font-bold text-2xl">12</span>
+<span class="text-[10px] uppercase font-bold text-outline">Gaps Críticos</span>
+</div>
+</div>
+</div>
+<!-- Exploration Chips -->
+<div class="flex flex-wrap gap-2 mb-10 pb-4 overflow-x-auto no-scrollbar">
+<button class="chip-active px-6 py-2 rounded-full font-label-md text-label-md transition-all">Agriculture</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Crops</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Agronomy</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Livestock</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Ecology</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Water Resources</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Biotechnology</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Genetics</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Climate Change</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">AI</button>
+<button class="chip-inactive px-6 py-2 rounded-full font-label-md text-label-md transition-all">Data Science</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- MAIN CONTENT (Discovery Engine) -->
+<div class="lg:col-span-8 space-y-8">
+<div class="bg-white p-8 rounded-2xl border border-outline-variant/20 card-shadow">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline-md text-headline-md text-primary">¿Qué oportunidades científicas existen hoy?</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-sm">update</span>
+                            Actualizado hace 4 min
+                        </div>
+</div>
+<!-- Main Opportunity Card -->
+<article class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden card-shadow-hover group">
+<div class="p-8">
+<div class="flex items-start justify-between mb-6">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-md font-label-md text-[10px] uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                                    Propuesta de investigación generada por IA
+                                </span>
+<div class="flex gap-2">
+<span class="bg-emerald-500/10 text-emerald-700 px-3 py-1 rounded-md font-label-md text-[10px] uppercase">Alto Impacto</span>
+<span class="bg-amber-500/10 text-amber-700 px-3 py-1 rounded-md font-label-md text-[10px] uppercase">Evidencia Limitada</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-4 leading-tight">
+                                Uso combinado de microorganismos promotores del crecimiento y biochar para mejorar la resiliencia de cultivos frente a sequías prolongadas.
+                            </h4>
+<div class="flex items-center gap-6 mb-8 py-4 border-y border-outline-variant/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+<span class="font-label-md text-label-md">42 Publicaciones</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">groups</span>
+<span class="font-label-md text-label-md">12 Autores líderes</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<span class="font-label-md text-label-md">85% Relevancia</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+<div>
+<h5 class="font-label-md text-label-md text-primary uppercase mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">psychology</span> Motivación
+                                    </h5>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                                        La IA detectó estudios exitosos sobre biochar y microorganismos por separado, pero existe una falta crítica de integración en modelos de agricultura regenerativa bajo estrés hídrico extremo.
+                                    </p>
+</div>
+<div>
+<h5 class="font-label-md text-label-md text-primary uppercase mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">warning</span> Brechas Científicas
+                                    </h5>
+<ul class="space-y-2">
+<li class="flex items-start gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-base">close</span>
+                                            Sinergia metabólica no documentada in-situ.
+                                        </li>
+<li class="flex items-start gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-error text-base">close</span>
+                                            Resultados contradictorios en suelos arcillosos.
+                                        </li>
+</ul>
+</div>
+</div>
+<!-- Interdisciplinary Graph -->
+<div class="mb-10 p-6 bg-surface-variant/20 rounded-xl">
+<h5 class="font-label-md text-label-md text-on-surface uppercase mb-6 text-center">Conexión Interdisciplinaria</h5>
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 px-4">
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary">agriculture</span>
+</div>
+<span class="text-[10px] mt-2 font-bold uppercase text-outline">Agronomía</span>
+</div>
+<div class="node-line hidden md:block"></div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary">biotech</span>
+</div>
+<span class="text-[10px] mt-2 font-bold uppercase text-outline">Microbiología</span>
+</div>
+<div class="node-line hidden md:block"></div>
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary">engineering</span>
+</div>
+<span class="text-[10px] mt-2 font-bold uppercase text-outline">Ingeniería</span>
+</div>
+<div class="node-line hidden md:block"></div>
+<div class="flex flex-col items-center">
+<div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-xl border-4 border-white">
+<span class="material-symbols-outlined text-white">lightbulb</span>
+</div>
+<span class="text-[10px] mt-2 font-bold uppercase text-primary">Oportunidad</span>
+</div>
+</div>
+</div>
+<!-- Impact & Recommendations -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-8">
+<div class="space-y-4">
+<h5 class="font-label-md text-label-md text-on-surface-variant uppercase">Potencial de Impacto</h5>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-[11px] font-bold mb-1"><span>Agrícola</span><span>95%</span></div>
+<div class="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[95%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] font-bold mb-1"><span>Ambiental</span><span>88%</span></div>
+<div class="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-cyan-500 w-[88%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] font-bold mb-1"><span>Económico</span><span>72%</span></div>
+<div class="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[72%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary/5 p-6 rounded-xl border border-primary/10">
+<h5 class="font-label-md text-label-md text-primary uppercase mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">recommend</span> Recomendaciones IA
+                                    </h5>
+<div class="flex flex-col gap-3">
+<button class="flex items-center gap-3 text-left p-2 hover:bg-white rounded-lg transition-colors">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-sm text-body-sm">Diseñar experimento controlado</span>
+</button>
+<button class="flex items-center gap-3 text-left p-2 hover:bg-white rounded-lg transition-colors">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-sm text-body-sm">Consultar especialistas en suelos</span>
+</button>
+<button class="flex items-center gap-3 text-left p-2 hover:bg-white rounded-lg transition-colors">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-sm text-body-sm">Analizar datos satelitales históricos</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-wrap gap-3 pt-6 border-t border-outline-variant/10">
+<button class="flex-1 bg-primary text-on-primary py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_task</span>
+                                    Guardar como Proyecto
+                                </button>
+<button class="flex-1 bg-secondary text-on-secondary py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">psychology</span>
+                                    Generar Hipótesis
+                                </button>
+<button class="p-3 border border-outline-variant text-on-surface-variant rounded-xl hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">summarize</span>
+</button>
+<button class="p-3 border border-outline-variant text-on-surface-variant rounded-xl hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Small Second Opportunity Placeholder -->
+<div class="mt-6 p-6 border border-dashed border-outline-variant/50 rounded-xl flex items-center justify-center text-on-surface-variant italic font-body-sm">
+                        Detectando nueva oportunidad en el sector de Bioenergía...
+                    </div>
+</div>
+</div>
+<!-- RIGHT PANEL (Emerging Topics & Context) -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Emerging Topics -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/20 card-shadow">
+<h3 class="font-label-md text-label-md text-primary uppercase mb-6 flex justify-between items-center">
+                        Temas Emergentes
+                        <span class="bg-error/10 text-error px-2 py-0.5 rounded text-[10px]">Tendencia</span>
+</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center group cursor-pointer">
+<span class="font-body-sm text-body-sm group-hover:text-secondary transition-colors">Precision Phenotyping</span>
+<span class="text-xs font-mono text-outline">+142%</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<span class="font-body-sm text-body-sm group-hover:text-secondary transition-colors">Circular Bioeconomy</span>
+<span class="text-xs font-mono text-outline">+85%</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<span class="font-body-sm text-body-sm group-hover:text-secondary transition-colors">Nano-fertilizers</span>
+<span class="text-xs font-mono text-outline">+64%</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<span class="font-body-sm text-body-sm group-hover:text-secondary transition-colors">CRISPR/Cas9 Maize</span>
+<span class="text-xs font-mono text-outline">+38%</span>
+</div>
+</div>
+</div>
+<!-- Top Authors & Articles -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/20 card-shadow">
+<h3 class="font-label-md text-label-md text-primary uppercase mb-6">Autores Clave</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female scientist in a research lab, minimalist lighting, focused expression, high resolution academic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAixsxNAvWGexOxcKOfS8eHNJW0Ea0rbR3Fc9rd5_Ss5HQas-yS0xbk85DPSh415Nx9H-C1e5z8UYCvk_eIDmTgCtGQw4MfkfAnSSDMc60Cz_Y-WQu1h95u9sW2t4iT-meW1UjDZlU6Fp9nJbl_EznUiRiGnnsiJUf_jBMJUAypRxsCGaAOfMv89qJklZlPxpfNINVlMM9FwYCHRUnzsvQcxlCaoosw0_nSSt9EGs4pR-lwTEQJfErPdA"/>
+</div>
+<div>
+<p class="text-sm font-semibold">Dr. Elena Rodriguez</p>
+<p class="text-[10px] text-outline">CSIC - Microbiology</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a senior male researcher with glasses in a modern office, soft professional lighting, clean white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdug3KIIQNLt3BAdkNsqbiO5EirgZPUGNsQ0Vd45fyLoIxDkgBrUJeoolJr133JTHVL_LVD1cZalERJSD_8-S9MIN0psVCyN7YpSRjhvSuSq52cuJRFhF50a5LWzzHZN8G7-Jz8iuc7LufVgq8RPuGhCjUAsvrje2Bzu8ma__psHnYFn3KgC1fofyDP9PWIwQgUofjI7dGWc0o6IhVF9rBpc-AH8De-E80aHnrpVyzWWtPgJA-KtegLg"/>
+</div>
+<div>
+<p class="text-sm font-semibold">Prof. Mark Chen</p>
+<p class="text-[10px] text-outline">MIT - Precision Ag</p>
+</div>
+</div>
+</div>
+<hr class="my-6 border-outline-variant/20"/>
+<h3 class="font-label-md text-label-md text-primary uppercase mb-6">Artículos Recientes</h3>
+<div class="space-y-4">
+<div class="group cursor-pointer">
+<p class="text-xs font-bold text-secondary mb-1">Nature Ag • 2024</p>
+<p class="text-sm font-medium group-hover:underline">Global drought patterns and crop resilience mechanisms.</p>
+</div>
+<div class="group cursor-pointer">
+<p class="text-xs font-bold text-secondary mb-1">Science Direct • 2023</p>
+<p class="text-sm font-medium group-hover:underline">Advances in soil-microbe interaction modeling.</p>
+</div>
+</div>
+</div>
+<!-- Patents & Institutions -->
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/20 card-shadow">
+<h3 class="font-label-md text-label-md text-primary uppercase mb-6">Instituciones Líderes</h3>
+<div class="flex flex-wrap gap-4 items-center">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-outline">account_balance</span>
+</div>
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-outline">school</span>
+</div>
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-outline">apartment</span>
+</div>
+</div>
+<p class="text-[10px] text-outline mt-4 italic">7 Patentes relacionadas detectadas en el último trimestre.</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div id="tab-motor-ia" class="tab-panel" hidden>
+<div class="flex flex-col md:flex-row">
+<!-- Left Column: Core Reasoning & Input -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop max-w-5xl mx-auto">
+<!-- Central Nucleus -->
+<div class="relative flex flex-col items-center justify-center pt-stack-xl pb-stack-lg text-center">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] pointer-events-none opacity-20">
+<div class="nucleus-animation w-full h-full rounded-full blur-[80px]"></div>
+</div>
+<div class="relative z-10 space-y-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/10 border border-secondary/20 text-secondary mb-4">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-label-md font-mono-label">NÚCLEO ACTIVO</span>
+</div>
+<h1 class="font-display text-display text-primary tracking-tighter">Núcleo IA</h1>
+<p class="font-headline-md text-headline-md text-on-surface-variant max-w-2xl">Motor central de razonamiento científico.</p>
+<p class="font-body-md text-body-md text-outline max-w-lg mx-auto">Pregúntame cualquier tema de investigación y consultaré la literatura científica disponible antes de responder.</p>
+</div>
+</div>
+<!-- Investigation Engine (Process Bar) -->
+<div class="glass-panel rounded-xl p-6 mb-stack-lg flex flex-col gap-6">
+<div class="flex justify-between items-center overflow-x-auto no-scrollbar gap-8 pb-2">
+<div class="flex flex-col items-center gap-2 min-w-[120px] opacity-100">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<span class="text-label-md text-on-surface whitespace-nowrap">Interpretando consulta</span>
+</div>
+<div class="h-px w-full bg-outline-variant/30 flex-1 min-w-[20px] mb-6"></div>
+<div class="flex flex-col items-center gap-2 min-w-[120px] opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<span class="text-label-md text-on-surface-variant whitespace-nowrap">Bases científicas</span>
+</div>
+<div class="h-px w-full bg-outline-variant/30 flex-1 min-w-[20px] mb-6"></div>
+<div class="flex flex-col items-center gap-2 min-w-[120px] opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</div>
+<span class="text-label-md text-on-surface-variant whitespace-nowrap">Analizando resultados</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-stack-lg border-t border-outline-variant/20 pt-6">
+<!-- Logos Section -->
+<div class="flex items-center gap-8 grayscale opacity-40">
+<div class="h-6 flex items-center gap-2 font-headline-lg text-[18px] font-bold text-outline">OpenAlex</div>
+<div class="h-6 flex items-center gap-2 font-headline-lg text-[18px] font-bold text-outline">PubMed</div>
+<div class="h-6 flex items-center gap-2 font-headline-lg text-[18px] font-bold text-outline">arXiv</div>
+<div class="h-6 flex items-center gap-2 font-headline-lg text-[18px] font-bold text-outline">NASA</div>
+</div>
+</div>
+</div>
+<!-- Input Controls -->
+<div class="space-y-6">
+<div class="relative">
+<textarea id="chat-input" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 text-body-lg text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all shadow-sm h-32 resize-none" placeholder="Pregunta cualquier duda científica o describe un problema de investigación..." onkeydown="if(event.key==='Enter' &amp;&amp; !event.shiftKey){event.preventDefault(); enviarChat();}"></textarea>
+<div class="absolute bottom-4 right-4 flex gap-3">
+<button id="btn-chat-enviar" onclick="enviarChat()" class="bg-secondary text-on-secondary px-6 py-2 rounded-lg font-label-md flex items-center gap-2 hover:bg-secondary/90 transition-all shadow-lg active:scale-95">
+<span class="material-symbols-outlined text-[20px]">send</span>
+                            Investigar
+                        </button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center justify-center">
+<span class="text-label-md text-outline mr-2">Ejemplos:</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-label-md hover:bg-outline-variant transition-colors border border-transparent">Mecanismos de CRISPR en plantas</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-label-md hover:bg-outline-variant transition-colors border border-transparent">Impacto de microplásticos en el Ártico</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-label-md hover:bg-outline-variant transition-colors border border-transparent">Nuevas aleaciones de superconductores</button>
+</div>
+<div class="flex flex-col items-center justify-center pt-4">
+<button class="group flex flex-col items-center gap-3 transition-all hover:-translate-y-1">
+<div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-xl ring-4 ring-primary/10 group-hover:ring-primary/20 group-active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[32px]">mic</span>
+</div>
+<span class="text-label-md font-bold text-primary">Hablar con Núcleo IA</span>
+</button>
+</div>
+</div>
+<!-- Scientific Response Section (respuesta real del Núcleo IA) -->
+<div id="chat-respuesta-seccion" class="mt-stack-xl space-y-stack-lg border-t border-outline-variant/20 pt-stack-xl" hidden>
+<!-- Resumen -->
+<section class="glass-panel rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-secondary">auto_awesome</span>
+<h2 class="font-headline-md text-headline-md text-primary">Respuesta del Núcleo IA</h2>
+</div>
+<p id="chat-respuesta-texto" class="font-body-lg text-on-surface leading-relaxed whitespace-pre-line">
+                    </p>
+</section>
+</div>
+<!-- Detalle simulado (evidencia estructurada, hipótesis, fuentes): pendiente de implementar con datos reales -->
+<div class="mt-stack-xl space-y-stack-lg border-t border-outline-variant/20 pt-stack-xl" hidden>
+<!-- Bento Grid Results -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Evidencia Científica (Main/Large) -->
+<div class="md:col-span-2 glass-panel rounded-xl p-6 space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-body-lg font-bold text-primary">Evidencia Científica</h3>
+<span class="px-3 py-1 rounded-md bg-surface-container-high text-mono-label text-[10px]">12 ARTÍCULOS ANALIZADOS</span>
+</div>
+<div class="space-y-4">
+<div class="p-4 rounded-lg bg-[#E7F5ED] border-l-4 border-[#10B981]">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-[#10B981] text-[18px]">check_circle</span>
+<span class="font-bold text-[#065F46] text-label-md">Resultados Consistentes</span>
+</div>
+<p class="text-body-sm text-[#065F46]">Múltiples estudios (Wang et al., 2023; Smith, 2022) confirman la eficacia del tratamiento en modelos in vitro con una fiabilidad del 94%.</p>
+</div>
+<div class="p-4 rounded-lg bg-[#FFFBEB] border-l-4 border-[#F59E0B]">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-[#F59E0B] text-[18px]">warning</span>
+<span class="font-bold text-[#92400E] text-label-md">Contradicciones / Limitaciones</span>
+</div>
+<p class="text-body-sm text-[#92400E]">Persiste una contradicción en el estudio de Aris (2021) donde no se observó el efecto bajo condiciones de pH extremo. La muestra es insuficiente para generalizar.</p>
+</div>
+</div>
+</div>
+<!-- Hipótesis Sugeridas -->
+<div class="glass-panel rounded-xl p-6 bg-gradient-to-br from-primary-container/10 to-tertiary-container/10 border-primary-container/20">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-[20px]">lightbulb</span>
+<h3 class="font-bold text-primary text-label-md">Hipótesis de Inferencia IA</h3>
+</div>
+<ul class="space-y-4">
+<li class="text-body-sm text-on-surface-variant leading-snug pb-3 border-b border-outline-variant/20 italic">
+                                "Es probable que el mecanismo C actúe como catalizador oculto en ambientes de pH controlado."
+                            </li>
+<li class="text-body-sm text-on-surface-variant leading-snug pb-3 border-b border-outline-variant/20 italic">
+                                "La degradación proteica detectada sugiere una ruta metabólica alternativa no descrita."
+                            </li>
+</ul>
+<button class="w-full mt-4 py-2 text-label-md text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors">Diseñar Experimento</button>
+</div>
+</div>
+<!-- Sources List -->
+<section class="glass-panel rounded-xl p-6">
+<h3 class="font-headline-md text-body-lg font-bold text-primary mb-6">Fuentes Citadas</h3>
+<div class="space-y-6">
+<div class="flex flex-col md:flex-row gap-4 justify-between items-start pb-6 border-b border-outline-variant/10">
+<div>
+<h4 class="font-bold text-body-md text-on-surface mb-1">Advanced Neural Modulation in High-Frequency Systems</h4>
+<div class="flex flex-wrap gap-x-4 gap-y-2 text-label-md text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">person</span> L. Rodriguez, M. Schmidt</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">menu_book</span> Nature Electronics (2023)</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">link</span> DOI: 10.1038/s41928-023-1</span>
+</div>
+</div>
+<button class="text-secondary font-bold text-label-md flex items-center gap-1 hover:underline">
+                                Ver fuente <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+<div class="flex flex-col md:flex-row gap-4 justify-between items-start">
+<div>
+<h4 class="font-bold text-body-md text-on-surface mb-1">Comparative Analysis of CRISPR-Cas9 Efficiency in Sub-Saharan Crops</h4>
+<div class="flex flex-wrap gap-x-4 gap-y-2 text-label-md text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">person</span> FAO Research Group</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">menu_book</span> Plant Science Review (2022)</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">link</span> DOI: 10.1016/j.plantsci.2022</span>
+</div>
+</div>
+<button class="text-secondary font-bold text-label-md flex items-center gap-1 hover:underline">
+                                Ver fuente <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<div class="flex flex-wrap gap-4 pt-stack-md justify-center md:justify-start">
+<button class="px-6 py-3 rounded-lg bg-primary text-on-primary font-bold text-label-md flex items-center gap-2 shadow-lg">
+<span class="material-symbols-outlined">save</span> Guardar como Proyecto
+                    </button>
+<button class="px-6 py-3 rounded-lg border border-primary/20 text-primary font-bold text-label-md flex items-center gap-2 hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span> Generar PDF/Word
+                    </button>
+<button class="px-6 py-3 rounded-lg border border-primary/20 text-primary font-bold text-label-md flex items-center gap-2 hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined">add_circle</span> Crear Hipótesis
+                    </button>
+</div>
+</div>
+</div>
+<!-- Right Panel: Contextual Info -->
+<aside class="w-full md:w-80 bg-surface-container-low/50 border-l border-outline-variant/20 p-8 space-y-stack-lg">
+<!-- Research Mode -->
+<div class="space-y-4">
+<h3 class="text-label-md font-bold text-on-surface-variant uppercase tracking-wider">Modo de Investigación</h3>
+<div class="bg-surface-container-highest rounded-xl p-1 flex gap-1">
+<button class="flex-1 py-2 px-3 rounded-lg bg-surface-container-lowest text-primary font-bold text-label-md shadow-sm">Rápido</button>
+<button class="flex-1 py-2 px-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all text-label-md">Profundo</button>
+</div>
+<p class="text-[11px] text-outline px-1">El modo profundo consulta hasta 50 fuentes y realiza análisis multivariante (1-5 min).</p>
+</div>
+<!-- Temporal Memory -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="text-label-md font-bold text-on-surface-variant uppercase tracking-wider">Memoria Temporal</h3>
+<span class="material-symbols-outlined text-outline text-[18px]">history</span>
+</div>
+<div class="space-y-3">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-outline-variant/10 group cursor-pointer hover:border-secondary/30 transition-all">
+<p class="text-body-sm text-on-surface line-clamp-1">Síntesis de grafeno...</p>
+<div class="flex justify-between items-center mt-1">
+<span class="text-[10px] text-outline">Hace 2 horas</span>
+<span class="text-[10px] text-secondary font-mono-label">Exp: 29d</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-outline-variant/10 group cursor-pointer hover:border-secondary/30 transition-all">
+<p class="text-body-sm text-on-surface line-clamp-1">Inhibidores de mTOR...</p>
+<div class="flex justify-between items-center mt-1">
+<span class="text-[10px] text-outline">Ayer</span>
+<span class="text-[10px] text-secondary font-mono-label">Exp: 28d</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggested / Emerging -->
+<div class="space-y-4">
+<h3 class="text-label-md font-bold text-on-surface-variant uppercase tracking-wider">Temas Emergentes</h3>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-label-md font-bold text-on-surface leading-none">Bio-computación</p>
+<p class="text-[11px] text-outline">+240% Citaciones</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">psychology_alt</span>
+</div>
+<div>
+<p class="text-label-md font-bold text-on-surface leading-none">LLMs en Química</p>
+<p class="text-[11px] text-outline">Tendencia Global</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action for Mobile -->
+<div class="md:hidden fixed bottom-6 right-6">
+<button class="w-14 h-14 rounded-full bg-primary text-on-primary shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</aside>
+
+</div>
+</div>
+<div id="tab-experimentos" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">biotech</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Experimentos</h2>
+<p class="text-on-surface-variant font-body-md">Diseño y seguimiento de experimentos derivados de las hipótesis generadas.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+<div id="tab-laboratorio" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">science</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Laboratorio</h2>
+<p class="text-on-surface-variant font-body-md">Espacio de trabajo para pruebas y simulaciones.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+<div id="tab-grafico" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">hub</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Gráfico Científico</h2>
+<p class="text-on-surface-variant font-body-md">Visualización interactiva de conexiones entre autores, conceptos e hipótesis.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+<div id="tab-favoritos" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">star</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Favoritos</h2>
+<p class="text-on-surface-variant font-body-md">Artículos, autores e hipótesis que guardaste para volver a consultar.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+<div id="tab-configuracion" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">settings</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Configuración</h2>
+<p class="text-on-surface-variant font-body-md">Preferencias de la cuenta, fuentes de datos y parámetros del motor de IA.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+<div id="tab-soporte" class="tab-panel" hidden><div class="max-w-3xl mx-auto py-24 px-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">help</span>
+</div>
+<h2 class="font-display text-headline-lg text-primary mb-3">Soporte</h2>
+<p class="text-on-surface-variant font-body-md">Ayuda y documentación sobre el uso de NovaScientia AI.</p>
+<p class="text-outline text-body-sm mt-6 uppercase tracking-wider font-mono-label">Próximamente</p>
+</div></div>
+
+</main>
+<script>
+function showTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(function(el) {
+        el.hidden = true;
+    });
+    var target = document.getElementById('tab-' + tab);
+    if (target) target.hidden = false;
+
+    document.querySelectorAll('.nav-link').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    var link = document.querySelector('.nav-link[data-tab="' + tab + '"]');
+    if (link) link.classList.add('active');
+
+    document.getElementById('main-content').scrollTop = 0;
+}
+
+function showSubtab(id) {
+    document.querySelectorAll('.subtab-panel').forEach(function(el) {
+        el.hidden = true;
+    });
+    document.getElementById(id).hidden = false;
+
+    document.querySelectorAll('.subtab').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+document.querySelectorAll('.flex-wrap span, button.rounded-full').forEach(function(tag) {
+    tag.addEventListener('click', function(e) {
+        if (this.closest('.tab-panel') === null) return;
+    });
+});
+
+// ============================================================
+// Conexión con el backend de NovaScientia AI (Flask, localhost:5000)
+// ============================================================
+const API_BASE = 'http://localhost:5000';
+
+function escapeHtml(texto) {
+    var div = document.createElement('div');
+    div.innerText = texto == null ? '' : texto;
+    return div.innerHTML;
+}
+
+// ---------- Artículos ----------
+
+function renderizarArticulo(articulo) {
+    var titulo = escapeHtml(articulo.titulo || 'Sin título');
+    var resumen = escapeHtml((articulo.resumen_ia || articulo.resumen || 'Sin resumen disponible.'));
+    if (resumen.length > 400) resumen = resumen.slice(0, 400) + '…';
+    var fuente = escapeHtml(articulo.fuente || '');
+    var anio = articulo.anio_publicacion || '';
+    var doi = articulo.doi ? 'DOI: ' + escapeHtml(articulo.doi) : '';
+    var citas = articulo.citas_count || 0;
+    var url = articulo.url_fuente || '#';
+
+    return '' +
+    '<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-stack-lg article-card flex flex-col gap-4" data-articulo-id="' + articulo.id + '">' +
+        '<div class="flex justify-between items-start">' +
+            '<div class="flex items-center gap-stack-md text-label-md text-on-surface-variant font-mono-label">' +
+                '<span class="bg-primary/10 text-primary px-2 py-0.5 rounded">' + fuente + '</span>' +
+                '<span>' + anio + '</span>' +
+                (doi ? '<span>' + doi + '</span>' : '') +
+            '</div>' +
+        '</div>' +
+        '<h2 class="font-headline-md text-headline-md text-primary leading-tight">' + titulo + '</h2>' +
+        '<p class="text-on-surface-variant leading-relaxed text-body-md line-clamp-3">' + resumen + '</p>' +
+        '<div class="flex items-center justify-between mt-2 pt-4 border-t border-outline-variant/10">' +
+            '<div class="flex gap-6 items-center">' +
+                '<div class="flex items-center gap-1.5 text-on-surface-variant font-mono-label text-[13px]">' +
+                    '<span class="material-symbols-outlined text-[18px]">format_quote</span>' + citas + ' Citas' +
+                '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-2">' +
+                '<label class="flex items-center gap-1 text-body-sm text-primary font-semibold cursor-pointer">' +
+                    '<input type="checkbox" class="chk-articulo-hipotesis" value="' + articulo.id + '"/> Usar para hipótesis' +
+                '</label>' +
+                '<a href="' + url + '" target="_blank" class="bg-primary-container text-white px-5 py-2 rounded-lg font-semibold text-body-sm hover:opacity-90 flex items-center gap-2">' +
+                    '<span class="material-symbols-outlined text-[18px]">menu_book</span> Ver fuente' +
+                '</a>' +
+            '</div>' +
+        '</div>' +
+    '</div>';
+}
+
+function mostrarArticulos(lista) {
+    var contenedor = document.getElementById('lista-articulos');
+    var estado = document.getElementById('articulos-estado');
+    if (!lista || lista.length === 0) {
+        contenedor.innerHTML = '';
+        estado.textContent = 'No se encontraron artículos.';
+        return;
+    }
+    estado.textContent = lista.length + ' artículo(s).';
+    contenedor.innerHTML = lista.map(renderizarArticulo).join('');
+}
+
+async function buscarArticulos() {
+    var query = document.getElementById('buscador-articulos').value.trim();
+    var estado = document.getElementById('articulos-estado');
+    if (!query) {
+        cargarArticulosGuardados();
+        return;
+    }
+    estado.textContent = 'Buscando "' + query + '"...';
+    try {
+        var resp = await fetch(API_BASE + '/api/articulos/buscar?q=' + encodeURIComponent(query) + '&fuente=todas&limite=8');
+        var datos = await resp.json();
+        mostrarArticulos(datos.resultados);
+    } catch (err) {
+        estado.textContent = 'Error conectando con el servidor: ' + err.message;
+    }
+}
+
+async function cargarArticulosGuardados() {
+    var estado = document.getElementById('articulos-estado');
+    estado.textContent = 'Cargando artículos guardados...';
+    try {
+        var resp = await fetch(API_BASE + '/api/articulos');
+        var datos = await resp.json();
+        mostrarArticulos(datos);
+    } catch (err) {
+        estado.textContent = 'No se pudo conectar con el servidor (¿está corriendo "py app.py"?)';
+    }
+}
+
+// ---------- Motor AI (chat) ----------
+
+var historialChat = [];
+
+async function enviarChat() {
+    var input = document.getElementById('chat-input');
+    var mensaje = input.value.trim();
+    if (!mensaje) return;
+
+    var boton = document.getElementById('btn-chat-enviar');
+    var seccion = document.getElementById('chat-respuesta-seccion');
+    var textoResp = document.getElementById('chat-respuesta-texto');
+
+    boton.disabled = true;
+    seccion.hidden = false;
+    textoResp.textContent = 'Investigando...';
+
+    try {
+        var resp = await fetch(API_BASE + '/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mensaje: mensaje, historial: historialChat })
+        });
+        var datos = await resp.json();
+
+        if (datos.error) {
+            textoResp.textContent = 'Error: ' + datos.error;
+        } else {
+            textoResp.textContent = datos.respuesta;
+            historialChat.push({ role: 'user', content: mensaje });
+            historialChat.push({ role: 'assistant', content: datos.respuesta });
+            input.value = '';
+        }
+    } catch (err) {
+        textoResp.textContent = 'No se pudo conectar con el servidor (¿está corriendo "py app.py"?)';
+    } finally {
+        boton.disabled = false;
+    }
+}
+
+// Cargar los artículos guardados apenas se abre la pestaña de Artículos
+document.addEventListener('DOMContentLoaded', function() {
+    var linkArticulos = document.querySelector('.nav-link[data-tab="articulos"]');
+    if (linkArticulos) {
+        linkArticulos.addEventListener('click', function() {
+            cargarArticulosGuardados();
+        });
+    }
+});
+</script>
+</body>
+</html>
