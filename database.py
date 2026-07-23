@@ -221,6 +221,92 @@ TABLAS_SQL = [
 ]
 
 
+def _extraer(dic: dict, *claves, default=None):
+    """
+    Extrae un valor anidado de forma segura, sin romper si el modelo
+    devolvió una estructura ligeramente distinta a la esperada.
+    _extraer({"a": {"b": 1}}, "a", "b") -> 1
+    _extraer({"a": {}}, "a", "b") -> None
+    """
+    actual = dic
+    for clave in claves:
+        if not isinstance(actual, dict):
+            return default
+        actual = actual.get(clave)
+    return actual if actual is not None else default
+
+
+def guardar_hipotesis(conn, resultado_ia: dict, proyecto_id: int | None = None,
+                       articulo_ids: list[int] | None = None) -> int:
+    """
+    Guarda el resultado de generar_hipotesis() en la tabla `hipotesis`,
+    tanto si fue "generada" como "descartada" -- guardamos igual las
+    descartadas para tener registro de qué ideas ya se evaluaron y
+    por qué no pasaron el protocolo (evita volver a proponer lo mismo).
+
+    resultado_ia es el dict que devuelve groq_client.generar_hipotesis(),
+    con la forma que define SYSTEM_PROMPT_HIPOTESIS (decision_final,
+    novedad, combinacion, impacto, prioridad_agricola, hipotesis).
+
+    Si se pasan articulo_ids, registra el vínculo en hipotesis_articulo
+    (para saber qué artículos se usaron como evidencia).
+
+    Devuelve el id insertado.
+    """
+    import json
+
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO hipotesis (
+            proyecto_id, decision_final, motivo_descarte,
+            nivel_novedad, existe_idea_igual, existe_combinacion_equivalente,
+            existe_tecnologia_comercial, existe_patente_relacionada,
+            descubrimientos_combinados, es_combinacion_trivial, nueva_funcion,
+            categorias_impacto, area_agricola, subtema_agricola,
+            titulo_cientifico, idea_central, diferencia_estado_actual,
+            patentes_similares, riesgos, experimentos_sugeridos
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            proyecto_id,
+            resultado_ia.get("decision_final"),
+            resultado_ia.get("motivo_descarte"),
+
+            _extraer(resultado_ia, "novedad", "nivel"),
+            _extraer(resultado_ia, "novedad", "existe_idea_igual"),
+            _extraer(resultado_ia, "novedad", "existe_combinacion_equivalente"),
+            _extraer(resultado_ia, "novedad", "existe_tecnologia_comercial"),
+            _extraer(resultado_ia, "novedad", "existe_patente_relacionada"),
+
+            json.dumps(_extraer(resultado_ia, "combinacion", "descubrimientos", default=[]), ensure_ascii=False),
+            _extraer(resultado_ia, "combinacion", "es_trivial"),
+            _extraer(resultado_ia, "combinacion", "nueva_funcion"),
+
+            json.dumps(_extraer(resultado_ia, "impacto", "categorias_cumplidas", default=[]), ensure_ascii=False),
+            _extraer(resultado_ia, "prioridad_agricola", "area"),
+            _extraer(resultado_ia, "prioridad_agricola", "subtema"),
+
+            _extraer(resultado_ia, "hipotesis", "titulo_cientifico"),
+            _extraer(resultado_ia, "hipotesis", "idea_central"),
+            _extraer(resultado_ia, "hipotesis", "diferencia_estado_actual"),
+            json.dumps(_extraer(resultado_ia, "hipotesis", "antecedentes", "patentes_similares", default=[]), ensure_ascii=False),
+            json.dumps(_extraer(resultado_ia, "hipotesis", "riesgos", default=[]), ensure_ascii=False),
+            json.dumps(_extraer(resultado_ia, "hipotesis", "experimentos_sugeridos", default=[]), ensure_ascii=False),
+        ),
+    )
+    hipotesis_id = cursor.lastrowid
+
+    if articulo_ids:
+        cursor.executemany(
+            "INSERT OR IGNORE INTO hipotesis_articulo (hipotesis_id, articulo_id) VALUES (?, ?)",
+            [(hipotesis_id, articulo_id) for articulo_id in articulo_ids],
+        )
+
+    conn.commit()
+    return hipotesis_id
+
+
 def init_db() -> None:
     """
     Crea todas las tablas si todavía no existen.

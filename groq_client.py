@@ -17,8 +17,14 @@ import requests
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-MODELO_CHAT = "llama-3.3-70b-versatile"
-MODELO_HIPOTESIS = "deepseek-r1-distill-llama-70b"
+# NOTA (22/jul/2026): "llama-3.3-70b-versatile" fue deprecado por Groq el
+# 17/jun/2026 y se apaga el 16/ago/2026. "deepseek-r1-distill-llama-70b" ya
+# está dado de baja desde octubre 2025. El reemplazo oficial recomendado por
+# Groq para ambos casos es "openai/gpt-oss-120b" -- lo usamos para los dos
+# modos (chat e hipótesis) hasta que se anuncie algo mejor. Revisar
+# https://console.groq.com/docs/deprecations antes de tocar esto de nuevo.
+MODELO_CHAT = "openai/gpt-oss-120b"
+MODELO_HIPOTESIS = "openai/gpt-oss-120b"
 
 
 # El system prompt de identidad -- gobierna el modo conversación general.
@@ -195,20 +201,36 @@ def chat(mensaje: str, historial: list[dict] | None = None) -> str:
     return _llamar_groq(mensajes, MODELO_CHAT)
 
 
-def generar_hipotesis(contexto: str) -> dict:
+def generar_hipotesis(tema: str, resumenes_articulos: list[str] | None = None) -> dict:
     """
     Modo generación de hipótesis: aplica los 5 filtros y devuelve
     un diccionario ya parseado desde el JSON que responde el modelo.
 
-    "contexto" tiene que incluir la evidencia recuperada (resúmenes de
-    artículos relevantes) para que el modelo pueda evaluar novedad de
-    verdad, en vez de inventar.
+    "tema" es el tema de investigación en texto libre (ej: "biofertilizantes
+    en suelos ácidos"). "resumenes_articulos" es opcional: una lista de
+    resúmenes (texto) de artículos ya indexados que le dan evidencia real al
+    modelo para poder evaluar novedad -- sin esto, el modelo va a ser mucho
+    más conservador porque no tiene con qué contrastar la idea.
 
     Ejemplo de uso:
-        resultado = generar_hipotesis("Evidencia encontrada: ...")
+        resultado = generar_hipotesis(
+            "uso de biocarbón en suelos ácidos para fijación de nitrógeno",
+            resumenes_articulos=["Resumen del artículo 1...", "Resumen del artículo 2..."],
+        )
         if resultado["decision_final"] == "generada":
             print(resultado["hipotesis"]["titulo_cientifico"])
     """
+    contexto = f"Tema de investigación: {tema}"
+    if resumenes_articulos:
+        contexto += "\n\nEvidencia encontrada (resúmenes de artículos ya indexados):\n"
+        contexto += "\n---\n".join(resumenes_articulos)
+    else:
+        contexto += (
+            "\n\n(No se proveyeron artículos de referencia como evidencia. "
+            "Sé especialmente conservador con el Filtro 1 -- Novedad científica -- "
+            "ya que no hay con qué contrastar si la idea ya existe.)"
+        )
+
     mensajes = [
         {"role": "system", "content": SYSTEM_PROMPT_HIPOTESIS},
         {"role": "user", "content": contexto},

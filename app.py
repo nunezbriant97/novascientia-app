@@ -12,7 +12,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
-from database import get_connection, init_db
+from database import get_connection, init_db, guardar_hipotesis
 from adapters import crossref, europepmc, openalex, plos, semantic_scholar
 import groq_client
 
@@ -198,6 +198,65 @@ def chat_endpoint():
         return jsonify({"error": str(error)}), 500
 
     return jsonify({"respuesta": respuesta})
+
+
+@app.route("/api/hipotesis/generar", methods=["POST"])
+def generar_hipotesis_endpoint():
+    """
+    Genera (o descarta) una hipótesis de investigación aplicando el
+    protocolo de 5 filtros del Núcleo IA.
+
+    Body JSON:
+        {
+          "tema": "biofertilizantes en suelos ácidos" (requerido),
+          "proyecto_id": 3 (opcional, para vincular la hipótesis a un proyecto),
+          "articulo_ids": [12, 15, 20] (opcional, artículos ya indexados que
+                                          se usan como evidencia de contexto)
+        }
+
+    Guarda el resultado en la tabla `hipotesis` siempre (generada o
+    descartada, para no volver a evaluar la misma idea de cero después),
+    y devuelve el resultado.
+    """
+    datos = request.get_json(silent=True) or {}
+    tema = (datos.get("tema") or "").strip()
+    if not tema:
+        return jsonify({"error": "Falta el campo 'tema'"}), 400
+
+    proyecto_id = datos.get("proyecto_id")
+    articulo_ids = datos.get("articulo_ids") or []
+
+    conn = get_connection()
+
+    resumenes_articulos = []
+    if articulo_ids:
+        placeholders = ",".join("?" * len(articulo_ids))
+        filas = conn.execute(
+            f"SELECT resumen_ia, resumen FROM articulos WHERE id IN ({placeholders})",
+            articulo_ids,
+        ).fetchall()
+        # Preferimos resumen_ia (ya curado por la IA) y si no existe todavía,
+        # usamos el resumen crudo que vino de la fuente.
+        resumenes_articulos = [
+            fila["resumen_ia"] or fila["resumen"] for fila in filas if fila["resumen_ia"] or fila["resumen"]
+        ]
+
+    try:
+        resultado = groq_client.generar_hipotesis(tema, resumenes_articulos)
+    except RuntimeError as error:
+        conn.close()
+        return jsonify({"error": str(error)}), 500
+    except (ValueError, KeyError) as error:
+        # json.loads falló o el modelo devolvió una forma inesperada
+        conn.close()
+        return jsonify({"error": f"No se pudo interpretar la respuesta de la IA: {error}"}), 502
+
+    hipotesis_id = guardar_hipotesis(conn, resultado, proyecto_id=proyecto_id, articulo_ids=articulo_ids)
+    conn.close()
+
+    respuesta = {"id": hipotesis_id, **resultado}
+    codigo_http = 201 if resultado.get("decision_final") == "generada" else 200
+    return jsonify(respuesta), codigo_http
 
 
 if __name__ == "__main__":
