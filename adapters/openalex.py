@@ -109,3 +109,90 @@ def buscar(consulta: str, limite: int = 10) -> list[dict]:
     items_crudos = datos.get("results", [])
 
     return [mapear_a_articulo(item) for item in items_crudos]
+
+
+# --------------------------------------------------------------------------
+# Búsqueda de AUTORES (reemplaza lo que iba a hacer el endpoint de ORCID).
+#
+# OpenAlex ya tiene su propio catálogo de autores, gratis y sin necesidad
+# de credenciales -- incluye el ORCID de cada autor cuando lo tiene, así
+# que no perdemos esa info, solo cambiamos de dónde la sacamos.
+# Documentación: https://docs.openalex.org/api-entities/authors
+# --------------------------------------------------------------------------
+
+BASE_URL_AUTORES = "https://api.openalex.org/authors"
+
+
+def mapear_a_autor(item: dict) -> dict:
+    """
+    Toma UN resultado crudo de la API de Authors de OpenAlex y lo traduce
+    a nuestro esquema normalizado (el mismo de la tabla `autores`).
+    """
+    autor = {
+        "nombre_completo": item.get("display_name"),
+        "orcid": None,
+        "semantic_scholar_id": None,
+        "institucion": None,
+        "pais": None,
+        "area_especialidad": None,
+        "h_index": None,
+        "citas_totales": item.get("cited_by_count"),
+        "publicaciones_count": item.get("works_count"),
+        "metadata_raw": None,
+    }
+
+    # El orcid viene como URL completa ("https://orcid.org/0000-...") --
+    # nos quedamos solo con el identificador, que es lo que usamos como
+    # clave única en la tabla.
+    orcid_url = item.get("orcid")
+    if orcid_url:
+        autor["orcid"] = orcid_url.rsplit("/", 1)[-1]
+
+    # Última institución conocida (puede no estar si el autor no publicó
+    # nada recientemente con afiliación declarada).
+    instituciones = item.get("last_known_institutions") or []
+    if instituciones:
+        primera = instituciones[0]
+        autor["institucion"] = primera.get("display_name")
+        autor["pais"] = primera.get("country_code")
+
+    # Área de especialidad: OpenAlex la infiere a partir de los temas
+    # ("topics") de los papers del autor. Nos quedamos con el más frecuente.
+    topics = item.get("topics") or []
+    if topics:
+        autor["area_especialidad"] = topics[0].get("display_name")
+
+    # h_index vive adentro de summary_stats
+    resumen_stats = item.get("summary_stats") or {}
+    autor["h_index"] = resumen_stats.get("h_index")
+
+    guardar_metadata_raw(autor, item)
+
+    return autor
+
+
+def buscar_autores(consulta: str, limite: int = 10) -> list[dict]:
+    """
+    Busca investigadores por nombre en OpenAlex y devuelve una lista de
+    autores YA normalizados (listos para guardar en la tabla `autores`).
+
+    Reemplaza la función que iba a cumplir ORCID en el diseño original --
+    misma info (nombre, orcid, institución, h-index, publicaciones), pero
+    sin necesitar credenciales ni pasar por el registro de Developer Tools.
+
+    Ejemplo de uso:
+        resultados = buscar_autores("Carlos Bravo suelo Ecuador", limite=5)
+    """
+    parametros = {
+        "search": consulta,
+        "per_page": limite,
+        "mailto": MAIL_DE_CONTACTO,
+    }
+
+    respuesta = requests.get(BASE_URL_AUTORES, params=parametros, timeout=15)
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+    items_crudos = datos.get("results", [])
+
+    return [mapear_a_autor(item) for item in items_crudos]
