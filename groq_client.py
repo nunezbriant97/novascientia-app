@@ -190,13 +190,23 @@ def chat(mensaje: str, historial: list[dict] | None = None) -> str:
     [{"role": "user"/"assistant", "content": "..."}], para que el modelo
     recuerde el contexto de la conversación.
 
+    Si el mensaje pide algo que debería estar respaldado por literatura
+    real (papers, autores, "estado del arte", etc.), esta función busca
+    evidencia de verdad antes de preguntarle al modelo -- ver evidencia.py.
+    Sin esto, el modelo puede inventar referencias con mucha confianza
+    (nos pasó en las pruebas: un DOI y una cita completa que no existían).
+
     Ejemplo de uso:
         respuesta = chat("¿Qué es el microbioma ruminal?")
     """
+    import evidencia  # import acá adentro para evitar import circular con database/adapters
+
+    mensaje_enriquecido = evidencia.construir_mensaje_con_contexto(mensaje)
+
     mensajes = [{"role": "system", "content": SYSTEM_PROMPT_CHAT}]
     if historial:
         mensajes.extend(historial)
-    mensajes.append({"role": "user", "content": mensaje})
+    mensajes.append({"role": "user", "content": mensaje_enriquecido})
 
     return _llamar_groq(mensajes, MODELO_CHAT)
 

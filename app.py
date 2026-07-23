@@ -12,9 +12,10 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
-from database import get_connection, init_db, guardar_hipotesis
+from database import get_connection, init_db, guardar_hipotesis, guardar_articulo
 from adapters import crossref, europepmc, openalex, plos, semantic_scholar
 import groq_client
+import sve
 
 load_dotenv()  # lee el archivo .env y carga las claves como variables de entorno
 
@@ -30,70 +31,6 @@ ADAPTERS = {
     "europepmc": europepmc,
     "plos": plos,
 }
-
-
-def guardar_articulo(conn, articulo: dict) -> int:
-    """
-    Guarda un artículo normalizado en la base de datos.
-
-    Si ya existe un artículo con el mismo DOI (venido de otra fuente),
-    actualiza algunos campos (citas, tiene_texto_completo) en vez de
-    crear un duplicado -- esta es la deduplicación que diseñamos.
-
-    Devuelve el id del artículo en la base (nuevo o existente).
-    """
-    cursor = conn.cursor()
-
-    articulo_existente = None
-    if articulo.get("doi"):
-        articulo_existente = cursor.execute(
-            "SELECT id FROM articulos WHERE doi = ?", (articulo["doi"],)
-        ).fetchone()
-
-    if articulo_existente:
-        # Ya lo teníamos (de esta u otra fuente) -- actualizamos algunos
-        # campos que pueden haber cambiado, pero NO tocamos resumen_ia
-        # (eso lo genera el motor de IA aparte, no queremos perderlo)
-        cursor.execute(
-            """
-            UPDATE articulos
-            SET citas_count = ?, tiene_texto_completo = ?, fecha_actualizado = CURRENT_TIMESTAMP
-            WHERE id = ?
-            """,
-            (
-                articulo.get("citas_count", 0),
-                articulo.get("tiene_texto_completo", False),
-                articulo_existente["id"],
-            ),
-        )
-        return articulo_existente["id"]
-
-    # No existía -- lo insertamos nuevo
-    cursor.execute(
-        """
-        INSERT INTO articulos (
-            doi, identificador_externo, titulo, resumen, fuente, revista,
-            anio_publicacion, fecha_publicacion, tiene_texto_completo,
-            licencia, url_fuente, citas_count, metadata_raw
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            articulo.get("doi"),
-            articulo.get("identificador_externo"),
-            articulo.get("titulo"),
-            articulo.get("resumen"),
-            articulo.get("fuente"),
-            articulo.get("revista"),
-            articulo.get("anio_publicacion"),
-            articulo.get("fecha_publicacion"),
-            articulo.get("tiene_texto_completo", False),
-            articulo.get("licencia"),
-            articulo.get("url_fuente"),
-            articulo.get("citas_count", 0),
-            articulo.get("metadata_raw"),
-        ),
-    )
-    return cursor.lastrowid
 
 
 @app.route("/api/articulos/buscar", methods=["GET"])
@@ -257,6 +194,110 @@ def generar_hipotesis_endpoint():
     respuesta = {"id": hipotesis_id, **resultado}
     codigo_http = 201 if resultado.get("decision_final") == "generada" else 200
     return jsonify(respuesta), codigo_http
+
+
+@app.route("/api/proyectos", methods=["POST"])
+def crear_proyecto():
+    """
+    Crea un proyecto nuevo.
+
+    Body JSON: {"titulo": "..." (requerido), "descripcion": "...", "categoria": "..."}
+    """
+    datos = request.get_json(silent=True) or {}
+    titulo = (datos.get("titulo") or "").strip()
+    if not titulo:
+        return jsonify({"error": "Falta el campo 'titulo'"}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO proyectos (titulo, descripcion, categoria) VALUES (?, ?, ?)",
+        (titulo, datos.get("descripcion"), datos.get("categoria")),
+    )
+    proyecto_id = cursor.lastrowid
+    cursor.execute(
+        "INSERT INTO proyecto_actividad_ia (proyecto_id, descripcion) VALUES (?, ?)",
+        (proyecto_id, "Proyecto creado."),
+    )
+    conn.commit()
+
+    fila = conn.execute("SELECT * FROM proyectos WHERE id = ?", (proyecto_id,)).fetchone()
+    conn.close()
+    return jsonify(dict(fila)), 201
+
+
+@app.route("/api/proyectos", methods=["GET"])
+def listar_proyectos():
+    """Lista todos los proyectos, más recientes primero."""
+    conn = get_connection()
+    filas = conn.execute("SELECT * FROM proyectos ORDER BY fecha_creacion DESC").fetchall()
+    conn.close()
+    return jsonify([dict(f) for f in filas])
+
+
+@app.route("/api/proyectos/<int:proyecto_id>", methods=["GET"])
+def obtener_proyecto(proyecto_id):
+    """Devuelve un proyecto puntual, junto con su conversación del SVE."""
+    conn = get_connection()
+    fila = conn.execute("SELECT * FROM proyectos WHERE id = ?", (proyecto_id,)).fetchone()
+    if fila is None:
+        conn.close()
+        return jsonify({"error": "Proyecto no encontrado"}), 404
+
+    proyecto = dict(fila)
+    proyecto["mensajes"] = sve.obtener_historial(conn, proyecto_id)
+    conn.close()
+    return jsonify(proyecto)
+
+
+@app.route("/api/proyectos/<int:proyecto_id>/mensajes", methods=["POST"])
+def enviar_mensaje(proyecto_id):
+    """
+    Manda un turno de charla al Scientific Visual Engine para un proyecto.
+
+    Body JSON: {"mensaje": "texto del usuario"}
+
+    Si el mensaje es una charla normal, devuelve {"tipo": "texto", "respuesta": "..."}.
+    Si el mensaje pide una imagen ("dibújalo", "hazme un render", etc.),
+    devuelve {"tipo": "imagen", "titulo": ..., "url": ..., ...}.
+    """
+    datos = request.get_json(silent=True) or {}
+    mensaje = datos.get("mensaje")
+    if not mensaje:
+        return jsonify({"error": "Falta el campo 'mensaje'"}), 400
+
+    try:
+        resultado = sve.responder_mensaje(proyecto_id, mensaje)
+    except RuntimeError as error:
+        return jsonify({"error": str(error)}), 502
+
+    return jsonify(resultado)
+
+
+@app.route("/api/proyectos/<int:proyecto_id>/mensajes", methods=["GET"])
+def listar_mensajes(proyecto_id):
+    """Devuelve toda la conversación guardada de un proyecto (orden cronológico)."""
+    conn = get_connection()
+    historial = sve.obtener_historial(conn, proyecto_id)
+    conn.close()
+    return jsonify(historial)
+
+
+@app.route("/api/proyectos/<int:proyecto_id>/visualizar", methods=["POST"])
+def forzar_visualizacion(proyecto_id):
+    """
+    Genera la imagen del proyecto ya, sin pasar por el chat (ej: para un
+    botón "Generar imagen" directo en el frontend).
+    """
+    conn = get_connection()
+    try:
+        resultado = sve.generar_visualizacion(conn, proyecto_id)
+    except RuntimeError as error:
+        return jsonify({"error": str(error)}), 502
+    finally:
+        conn.close()
+
+    return jsonify(resultado)
 
 
 if __name__ == "__main__":
