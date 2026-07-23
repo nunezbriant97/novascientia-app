@@ -33,13 +33,91 @@ def get_connection() -> sqlite3.Connection:
     row_factory = sqlite3.Row hace que cada fila se pueda leer como si
     fuera un diccionario (fila["titulo"]) en vez de por posición (fila[2]),
     que es mucho más fácil de leer en el resto del código.
+
+    timeout=10: si otra conexión tiene la base ocupada un instante (algo
+    normal en SQLite cuando hay varios requests casi al mismo tiempo),
+    espera hasta 10 segundos antes de tirar "database is locked", en vez
+    de fallar al toque.
     """
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
     # Sin esto, SQLite ignora las FOREIGN KEY por defecto (por compatibilidad
     # histórica). Lo activamos para que se respeten de verdad.
     conn.execute("PRAGMA foreign_keys = ON")
+    # WAL permite que una lectura y una escritura convivan sin bloquearse
+    # mutuamente -- reduce mucho los "database is locked" cuando el chat
+    # (evidencia.py) y una búsqueda de artículos golpean la base casi
+    # al mismo tiempo.
+    conn.execute("PRAGMA journal_mode = WAL")
     return conn
+
+
+def guardar_articulo(conn: sqlite3.Connection, articulo: dict) -> int:
+    """
+    Guarda un artículo normalizado en la base de datos.
+
+    Si ya existe un artículo con el mismo DOI (venido de otra fuente),
+    actualiza algunos campos (citas, tiene_texto_completo) en vez de
+    crear un duplicado -- esta es la deduplicación que diseñamos.
+
+    Vive acá (y no en app.py) porque tanto /api/articulos/buscar como
+    evidencia.py (usado por el chat) necesitan guardar artículos, y no
+    queremos duplicar la lógica ni tener imports circulares.
+
+    Devuelve el id del artículo en la base (nuevo o existente).
+    """
+    cursor = conn.cursor()
+
+    articulo_existente = None
+    if articulo.get("doi"):
+        articulo_existente = cursor.execute(
+            "SELECT id FROM articulos WHERE doi = ?", (articulo["doi"],)
+        ).fetchone()
+
+    if articulo_existente:
+        # Ya lo teníamos (de esta u otra fuente) -- actualizamos algunos
+        # campos que pueden haber cambiado, pero NO tocamos resumen_ia
+        # (eso lo genera el motor de IA aparte, no queremos perderlo)
+        cursor.execute(
+            """
+            UPDATE articulos
+            SET citas_count = ?, tiene_texto_completo = ?, fecha_actualizado = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (
+                articulo.get("citas_count", 0),
+                articulo.get("tiene_texto_completo", False),
+                articulo_existente["id"],
+            ),
+        )
+        return articulo_existente["id"]
+
+    # No existía -- lo insertamos nuevo
+    cursor.execute(
+        """
+        INSERT INTO articulos (
+            doi, identificador_externo, titulo, resumen, fuente, revista,
+            anio_publicacion, fecha_publicacion, tiene_texto_completo,
+            licencia, url_fuente, citas_count, metadata_raw
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            articulo.get("doi"),
+            articulo.get("identificador_externo"),
+            articulo.get("titulo"),
+            articulo.get("resumen"),
+            articulo.get("fuente"),
+            articulo.get("revista"),
+            articulo.get("anio_publicacion"),
+            articulo.get("fecha_publicacion"),
+            articulo.get("tiene_texto_completo", False),
+            articulo.get("licencia"),
+            articulo.get("url_fuente"),
+            articulo.get("citas_count", 0),
+            articulo.get("metadata_raw"),
+        ),
+    )
+    return cursor.lastrowid
 
 
 # Todas las sentencias CREATE TABLE que diseñamos, en el orden correcto

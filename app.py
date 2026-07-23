@@ -12,7 +12,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 
-from database import get_connection, guardar_hipotesis, init_db
+from database import get_connection, guardar_articulo, guardar_hipotesis, init_db
 from adapters import crossref, europepmc, openalex, plos, semantic_scholar
 import groq_client
 
@@ -50,70 +50,6 @@ ADAPTERS = {
     "europepmc": europepmc,
     "plos": plos,
 }
-
-
-def guardar_articulo(conn, articulo: dict) -> int:
-    """
-    Guarda un artículo normalizado en la base de datos.
-
-    Si ya existe un artículo con el mismo DOI (venido de otra fuente),
-    actualiza algunos campos (citas, tiene_texto_completo) en vez de
-    crear un duplicado -- esta es la deduplicación que diseñamos.
-
-    Devuelve el id del artículo en la base (nuevo o existente).
-    """
-    cursor = conn.cursor()
-
-    articulo_existente = None
-    if articulo.get("doi"):
-        articulo_existente = cursor.execute(
-            "SELECT id FROM articulos WHERE doi = ?", (articulo["doi"],)
-        ).fetchone()
-
-    if articulo_existente:
-        # Ya lo teníamos (de esta u otra fuente) -- actualizamos algunos
-        # campos que pueden haber cambiado, pero NO tocamos resumen_ia
-        # (eso lo genera el motor de IA aparte, no queremos perderlo)
-        cursor.execute(
-            """
-            UPDATE articulos
-            SET citas_count = ?, tiene_texto_completo = ?, fecha_actualizado = CURRENT_TIMESTAMP
-            WHERE id = ?
-            """,
-            (
-                articulo.get("citas_count", 0),
-                articulo.get("tiene_texto_completo", False),
-                articulo_existente["id"],
-            ),
-        )
-        return articulo_existente["id"]
-
-    # No existía -- lo insertamos nuevo
-    cursor.execute(
-        """
-        INSERT INTO articulos (
-            doi, identificador_externo, titulo, resumen, fuente, revista,
-            anio_publicacion, fecha_publicacion, tiene_texto_completo,
-            licencia, url_fuente, citas_count, metadata_raw
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            articulo.get("doi"),
-            articulo.get("identificador_externo"),
-            articulo.get("titulo"),
-            articulo.get("resumen"),
-            articulo.get("fuente"),
-            articulo.get("revista"),
-            articulo.get("anio_publicacion"),
-            articulo.get("fecha_publicacion"),
-            articulo.get("tiene_texto_completo", False),
-            articulo.get("licencia"),
-            articulo.get("url_fuente"),
-            articulo.get("citas_count", 0),
-            articulo.get("metadata_raw"),
-        ),
-    )
-    return cursor.lastrowid
 
 
 @app.route("/")
@@ -169,23 +105,25 @@ def buscar_articulos():
     resultados = []
     errores = {}
 
-    for nombre_fuente in fuentes_a_consultar:
-        try:
-            articulos_encontrados = ADAPTERS[nombre_fuente].buscar(consulta, limite)
-        except Exception as error:
-            # Si una fuente falla (ej: está caída, o sin internet), no
-            # queremos que se rompa toda la búsqueda -- guardamos el
-            # error y seguimos con las demás fuentes
-            errores[nombre_fuente] = str(error)
-            continue
+    try:
+        for nombre_fuente in fuentes_a_consultar:
+            try:
+                articulos_encontrados = ADAPTERS[nombre_fuente].buscar(consulta, limite)
+            except Exception as error:
+                # Si una fuente falla (ej: está caída, o sin internet), no
+                # queremos que se rompa toda la búsqueda -- guardamos el
+                # error y seguimos con las demás fuentes
+                errores[nombre_fuente] = str(error)
+                continue
 
-        for articulo in articulos_encontrados:
-            articulo_id = guardar_articulo(conn, articulo)
-            articulo["id"] = articulo_id
-            resultados.append(articulo)
+            for articulo in articulos_encontrados:
+                articulo_id = guardar_articulo(conn, articulo)
+                articulo["id"] = articulo_id
+                resultados.append(articulo)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+    finally:
+        conn.close()
 
     respuesta = {"resultados": resultados, "total": len(resultados)}
     if errores:
@@ -237,81 +175,75 @@ def chat_endpoint():
     return jsonify({"respuesta": respuesta})
 
 
-def _armar_contexto(conn, tema: str | None, articulo_ids: list[int]) -> str:
+def _obtener_resumenes(conn, articulo_ids: list[int]) -> list[str]:
     """
-    Arma el texto de "contexto" que se le manda al Núcleo IA para que
-    pueda evaluar novedad de verdad en base a evidencia real, en vez
-    de inventar. Junta el tema (si lo mandaron) con los resúmenes de
-    los artículos elegidos como evidencia.
+    Trae de la base los resúmenes de los artículos elegidos como
+    evidencia, en el formato de texto que espera
+    groq_client.generar_hipotesis(tema, resumenes_articulos).
     """
-    partes = []
-    if tema:
-        partes.append(f"Tema propuesto para la hipótesis: {tema}")
+    if not articulo_ids:
+        return []
 
-    if articulo_ids:
-        placeholders = ",".join("?" * len(articulo_ids))
-        filas = conn.execute(
-            f"""
-            SELECT id, doi, titulo, resumen, resumen_ia, anio_publicacion
-            FROM articulos WHERE id IN ({placeholders})
-            """,
-            articulo_ids,
-        ).fetchall()
+    placeholders = ",".join("?" * len(articulo_ids))
+    filas = conn.execute(
+        f"""
+        SELECT id, doi, titulo, resumen, resumen_ia, anio_publicacion
+        FROM articulos WHERE id IN ({placeholders})
+        """,
+        articulo_ids,
+    ).fetchall()
 
-        partes.append("Evidencia recuperada (artículos ya indexados):")
-        for fila in filas:
-            resumen = fila["resumen_ia"] or fila["resumen"] or "(sin resumen disponible)"
-            partes.append(
-                f"- [id={fila['id']}, doi={fila['doi']}, año={fila['anio_publicacion']}] "
-                f"{fila['titulo']}: {resumen}"
-            )
-
-    return "\n\n".join(partes)
+    resumenes = []
+    for fila in filas:
+        resumen = fila["resumen_ia"] or fila["resumen"] or "(sin resumen disponible)"
+        resumenes.append(
+            f"[id={fila['id']}, doi={fila['doi']}, año={fila['anio_publicacion']}] "
+            f"{fila['titulo']}: {resumen}"
+        )
+    return resumenes
 
 
 @app.route("/api/hipotesis/generar", methods=["POST"])
 def generar_hipotesis_endpoint():
     """
-    Genera una hipótesis con el Núcleo IA (DeepSeek), aplicando los 5
-    filtros del protocolo de innovación, y la guarda en la base
-    (generada o descartada -- se guarda igual, para tener el historial).
+    Genera una hipótesis con el Núcleo IA, aplicando los 5 filtros del
+    protocolo de innovación, y la guarda en la base (generada o
+    descartada -- se guarda igual, para tener el historial).
 
     Espera un JSON en el body:
         {
-            "tema": "biofertilizantes en suelos ácidos",   (opcional)
+            "tema": "biofertilizantes en suelos ácidos",   (obligatorio)
             "articulo_ids": [12, 34, 57],                  (opcional, recomendado)
             "proyecto_id": 3                               (opcional)
         }
-
-    Al menos "tema" o "articulo_ids" tiene que venir -- sin nada de
-    evidencia ni tema, el Núcleo IA no tiene sobre qué evaluar novedad.
     """
     datos = request.get_json(silent=True) or {}
     tema = datos.get("tema")
     articulo_ids = datos.get("articulo_ids") or []
     proyecto_id = datos.get("proyecto_id")
 
-    if not tema and not articulo_ids:
+    if not tema:
         return jsonify({
-            "error": "Mandá al menos 'tema' o 'articulo_ids' para tener sobre qué generar la hipótesis"
+            "error": "Falta 'tema': describí sobre qué tema generar la hipótesis"
         }), 400
 
     conn = get_connection()
-    contexto = _armar_contexto(conn, tema, articulo_ids)
 
     try:
-        resultado = groq_client.generar_hipotesis(contexto)
-    except RuntimeError as error:
-        # Falta GROQ_API_KEY en el .env
-        conn.close()
-        return jsonify({"error": str(error)}), 500
-    except (KeyError, ValueError) as error:
-        # El modelo devolvió algo que no se pudo interpretar como el JSON esperado
-        conn.close()
-        return jsonify({"error": f"Respuesta inesperada del Núcleo IA: {error}"}), 502
+        resumenes = _obtener_resumenes(conn, articulo_ids)
 
-    hipotesis_id = guardar_hipotesis(conn, resultado, proyecto_id, articulo_ids)
-    conn.close()
+        try:
+            resultado = groq_client.generar_hipotesis(tema, resumenes)
+        except RuntimeError as error:
+            # Falta GROQ_API_KEY en el .env
+            return jsonify({"error": str(error)}), 500
+        except (KeyError, ValueError) as error:
+            # El modelo devolvió algo que no se pudo interpretar como el JSON esperado
+            return jsonify({"error": f"Respuesta inesperada del Núcleo IA: {error}"}), 502
+
+        hipotesis_id = guardar_hipotesis(conn, resultado, proyecto_id, articulo_ids)
+    finally:
+        conn.close()
 
     respuesta = {"id": hipotesis_id, **resultado}
     codigo = 201 if resultado.get("decision_final") == "generada" else 200
