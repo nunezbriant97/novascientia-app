@@ -6,7 +6,6 @@ Este archivo junta las tablas que fuimos diseñando en el chat:
 - articulos             (el esquema normalizado que llenan los adapters)
 - autores + articulo_autor
 - proyectos + proyecto_hito + proyecto_articulo + proyecto_actividad_ia
-- proyecto_mensaje       (charla del Scientific Visual Engine, por proyecto)
 - hipotesis + hipotesis_articulo
 
 Uso típico en el resto de la app:
@@ -18,6 +17,7 @@ Uso típico en el resto de la app:
     conn.commit()
 """
 
+import json
 import os
 import sqlite3
 
@@ -213,16 +213,6 @@ TABLAS_SQL = [
     "CREATE INDEX IF NOT EXISTS idx_hipotesis_novedad ON hipotesis(nivel_novedad)",
     "CREATE INDEX IF NOT EXISTS idx_hipotesis_area ON hipotesis(area_agricola)",
     """
-    CREATE TABLE IF NOT EXISTS proyecto_mensaje (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        proyecto_id INTEGER NOT NULL REFERENCES proyectos(id),
-        rol         TEXT NOT NULL CHECK(rol IN ('usuario', 'asistente')),
-        contenido   TEXT NOT NULL,
-        fecha       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-    """,
-    "CREATE INDEX IF NOT EXISTS idx_mensaje_proyecto ON proyecto_mensaje(proyecto_id)",
-    """
     CREATE TABLE IF NOT EXISTS hipotesis_articulo (
         hipotesis_id INTEGER NOT NULL REFERENCES hipotesis(id),
         articulo_id  INTEGER NOT NULL REFERENCES articulos(id),
@@ -232,103 +222,29 @@ TABLAS_SQL = [
 ]
 
 
-def guardar_articulo(conn, articulo: dict) -> int:
+def guardar_hipotesis(
+    conn: sqlite3.Connection,
+    resultado_ia: dict,
+    proyecto_id: int | None = None,
+    articulo_ids: list[int] | None = None,
+) -> int:
     """
-    Guarda un artículo normalizado en la base de datos.
+    Guarda en la tabla `hipotesis` el resultado que devuelve
+    groq_client.generar_hipotesis() -- se guarda SIEMPRE, tanto si fue
+    "generada" como "descartada" (así queda el historial completo de
+    lo que el Núcleo IA evaluó, no solo lo que aprobó).
 
-    Si ya existe un artículo con el mismo DOI (venido de otra fuente),
-    actualiza algunos campos (citas, tiene_texto_completo) en vez de
-    crear un duplicado -- esta es la deduplicación que diseñamos.
+    Si vinieron articulo_ids (los artículos que se usaron de contexto/
+    evidencia), se guarda también la relación en hipotesis_articulo.
 
-    Devuelve el id del artículo en la base (nuevo o existente).
-
-    Vive acá (no en app.py) porque también la usa evidencia.py para
-    guardar los artículos que encuentra al buscar contexto para el chat,
-    sin duplicar la lógica de deduplicación por DOI.
+    Devuelve el id de la hipótesis insertada.
     """
-    cursor = conn.cursor()
-
-    articulo_existente = None
-    if articulo.get("doi"):
-        articulo_existente = cursor.execute(
-            "SELECT id FROM articulos WHERE doi = ?", (articulo["doi"],)
-        ).fetchone()
-
-    if articulo_existente:
-        cursor.execute(
-            """
-            UPDATE articulos
-            SET citas_count = ?, tiene_texto_completo = ?, fecha_actualizado = CURRENT_TIMESTAMP
-            WHERE id = ?
-            """,
-            (
-                articulo.get("citas_count", 0),
-                articulo.get("tiene_texto_completo", False),
-                articulo_existente["id"],
-            ),
-        )
-        return articulo_existente["id"]
-
-    cursor.execute(
-        """
-        INSERT INTO articulos (
-            doi, identificador_externo, titulo, resumen, fuente, revista,
-            anio_publicacion, fecha_publicacion, tiene_texto_completo,
-            licencia, url_fuente, citas_count, metadata_raw
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            articulo.get("doi"),
-            articulo.get("identificador_externo"),
-            articulo.get("titulo"),
-            articulo.get("resumen"),
-            articulo.get("fuente"),
-            articulo.get("revista"),
-            articulo.get("anio_publicacion"),
-            articulo.get("fecha_publicacion"),
-            articulo.get("tiene_texto_completo", False),
-            articulo.get("licencia"),
-            articulo.get("url_fuente"),
-            articulo.get("citas_count", 0),
-            articulo.get("metadata_raw"),
-        ),
-    )
-    return cursor.lastrowid
-
-
-def _extraer(dic: dict, *claves, default=None):
-    """
-    Extrae un valor anidado de forma segura, sin romper si el modelo
-    devolvió una estructura ligeramente distinta a la esperada.
-    _extraer({"a": {"b": 1}}, "a", "b") -> 1
-    _extraer({"a": {}}, "a", "b") -> None
-    """
-    actual = dic
-    for clave in claves:
-        if not isinstance(actual, dict):
-            return default
-        actual = actual.get(clave)
-    return actual if actual is not None else default
-
-
-def guardar_hipotesis(conn, resultado_ia: dict, proyecto_id: int | None = None,
-                       articulo_ids: list[int] | None = None) -> int:
-    """
-    Guarda el resultado de generar_hipotesis() en la tabla `hipotesis`,
-    tanto si fue "generada" como "descartada" -- guardamos igual las
-    descartadas para tener registro de qué ideas ya se evaluaron y
-    por qué no pasaron el protocolo (evita volver a proponer lo mismo).
-
-    resultado_ia es el dict que devuelve groq_client.generar_hipotesis(),
-    con la forma que define SYSTEM_PROMPT_HIPOTESIS (decision_final,
-    novedad, combinacion, impacto, prioridad_agricola, hipotesis).
-
-    Si se pasan articulo_ids, registra el vínculo en hipotesis_articulo
-    (para saber qué artículos se usaron como evidencia).
-
-    Devuelve el id insertado.
-    """
-    import json
+    novedad = resultado_ia.get("novedad") or {}
+    combinacion = resultado_ia.get("combinacion") or {}
+    impacto = resultado_ia.get("impacto") or {}
+    prioridad = resultado_ia.get("prioridad_agricola") or {}
+    hipotesis = resultado_ia.get("hipotesis") or {}
+    antecedentes = hipotesis.get("antecedentes") or {}
 
     cursor = conn.cursor()
     cursor.execute(
@@ -347,27 +263,23 @@ def guardar_hipotesis(conn, resultado_ia: dict, proyecto_id: int | None = None,
             proyecto_id,
             resultado_ia.get("decision_final"),
             resultado_ia.get("motivo_descarte"),
-
-            _extraer(resultado_ia, "novedad", "nivel"),
-            _extraer(resultado_ia, "novedad", "existe_idea_igual"),
-            _extraer(resultado_ia, "novedad", "existe_combinacion_equivalente"),
-            _extraer(resultado_ia, "novedad", "existe_tecnologia_comercial"),
-            _extraer(resultado_ia, "novedad", "existe_patente_relacionada"),
-
-            json.dumps(_extraer(resultado_ia, "combinacion", "descubrimientos", default=[]), ensure_ascii=False),
-            _extraer(resultado_ia, "combinacion", "es_trivial"),
-            _extraer(resultado_ia, "combinacion", "nueva_funcion"),
-
-            json.dumps(_extraer(resultado_ia, "impacto", "categorias_cumplidas", default=[]), ensure_ascii=False),
-            _extraer(resultado_ia, "prioridad_agricola", "area"),
-            _extraer(resultado_ia, "prioridad_agricola", "subtema"),
-
-            _extraer(resultado_ia, "hipotesis", "titulo_cientifico"),
-            _extraer(resultado_ia, "hipotesis", "idea_central"),
-            _extraer(resultado_ia, "hipotesis", "diferencia_estado_actual"),
-            json.dumps(_extraer(resultado_ia, "hipotesis", "antecedentes", "patentes_similares", default=[]), ensure_ascii=False),
-            json.dumps(_extraer(resultado_ia, "hipotesis", "riesgos", default=[]), ensure_ascii=False),
-            json.dumps(_extraer(resultado_ia, "hipotesis", "experimentos_sugeridos", default=[]), ensure_ascii=False),
+            novedad.get("nivel"),
+            novedad.get("existe_idea_igual"),
+            novedad.get("existe_combinacion_equivalente"),
+            novedad.get("existe_tecnologia_comercial"),
+            novedad.get("existe_patente_relacionada"),
+            json.dumps(combinacion.get("descubrimientos"), ensure_ascii=False),
+            combinacion.get("es_trivial"),
+            combinacion.get("nueva_funcion"),
+            json.dumps(impacto.get("categorias_cumplidas"), ensure_ascii=False),
+            prioridad.get("area"),
+            prioridad.get("subtema"),
+            hipotesis.get("titulo_cientifico"),
+            hipotesis.get("idea_central"),
+            hipotesis.get("diferencia_estado_actual"),
+            json.dumps(antecedentes.get("patentes_similares"), ensure_ascii=False),
+            json.dumps(hipotesis.get("riesgos"), ensure_ascii=False),
+            json.dumps(hipotesis.get("experimentos_sugeridos"), ensure_ascii=False),
         ),
     )
     hipotesis_id = cursor.lastrowid
