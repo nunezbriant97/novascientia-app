@@ -1,0 +1,20 @@
+# Claves y secretos — NUNCA subir esto a GitHub
+.env
+
+# Base de datos local (se genera sola, no hace falta versionarla)
+*.db
+*.sqlite
+*.sqlite3
+
+# Entorno virtual de Python
+venv/
+env/
+.venv/
+
+# Archivos que Python genera solo al ejecutar
+__pycache__/
+*.pyc
+
+# Archivos temporales del sistema
+.DS_Store
+*.log
